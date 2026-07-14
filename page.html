@@ -10,7 +10,7 @@
 <link id="metaCanonical" rel="canonical" href="https://couponsmarkets.com/">
 
 <meta name="theme-color" content="#0f766e">
-<link rel="stylesheet" href="/assets/style.css?v=2">
+<link rel="stylesheet" href="/assets/style.css?v=3">
 </head>
 <body>
 
@@ -20,11 +20,6 @@
     <div class="search"><input type="text" id="searchInput" aria-label="Search">
       <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     </div>
-    <nav class="nav-cats">
-      <a href="/" data-cat="all" class="nav-all"></a>
-      <a href="/" data-cat="physical" class="nav-phys"></a>
-      <a href="/" data-cat="digital" class="nav-dig"></a>
-    </nav>
   </div>
 </header>
 
@@ -51,7 +46,7 @@
   </div>
 </footer>
 
-<script src="/assets/data.js?v=2"></script>
+<script src="/assets/data.js?v=3"></script>
 <script>
 function currentPageSlug(){
   const path=location.pathname.replace(/^\/|\/$/g,'');
@@ -63,9 +58,6 @@ function currentPageSlug(){
 function applyStaticUI(t){
   document.documentElement.lang=lang;
   document.getElementById('searchInput').placeholder=t.searchPh;
-  document.querySelector('.nav-all').textContent=t.navAll;
-  document.querySelector('.nav-phys').textContent=t.navPhys;
-  document.querySelector('.nav-dig').textContent=t.navDig;
   document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
   applyFooterUI(t);
 }

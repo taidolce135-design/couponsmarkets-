@@ -17,19 +17,62 @@ const COL = {
   code:        "Mã Coupon",
   url:         "Link affiliate",
   discount:    "% Giảm",
-  category:    "Category"
+  category:    "Category",
+  image:       "Ảnh sản phẩm",
+  rating:      "Số sao",
+  review:      "Đánh giá"
 };
 const BRAND_COL = { name:"Name", img:"img" };
 const PAGE_COL  = { slug:"Slug", title:"Tiêu đề", content:"Nội dung", metaDesc:"Mô tả meta" };
 
 /* ================================================================
+   DANH MUC SAN PHAM (co dinh, 12 muc). Cot "Category" trong Sheet
+   nhap dung 1 trong 12 ten tieng Viet duoi day (khong phan biet hoa/
+   thuong, co dau hay khong dau deu duoc). Neu go sai/de trong -> "Khac".
+   ================================================================ */
+const CATEGORIES = [
+  { slug:"arts-entertainment",   vi:"Nghệ thuật & Giải trí", en:"Arts & Entertainment" },
+  { slug:"business",             vi:"Việc kinh doanh",       en:"Business" },
+  { slug:"clothing-accessories", vi:"Quần áo & Phụ kiện",    en:"Clothing & Accessories" },
+  { slug:"food-gifts",           vi:"Thực phẩm & Quà tặng",  en:"Food & Gifts" },
+  { slug:"health-beauty",        vi:"Sức khỏe & Sắc đẹp",    en:"Health & Beauty" },
+  { slug:"home-garden",          vi:"Nhà cửa & Vườn",        en:"Home & Garden" },
+  { slug:"life-family",          vi:"Cuộc sống & Gia đình",  en:"Life & Family" },
+  { slug:"sports-fitness",       vi:"Thể thao & Thể dục",    en:"Sports & Fitness" },
+  { slug:"tech-electronics",     vi:"Công nghệ & Điện tử",   en:"Tech & Electronics" },
+  { slug:"travel",               vi:"Du lịch",               en:"Travel" },
+  { slug:"ai-saas",              vi:"AI & SaaS",             en:"AI & SaaS" },
+  { slug:"other",                vi:"Khác",                  en:"Other" }
+];
+
+function normalizeVN(s){
+  return (s||"").toString().trim().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/đ/g,'d');
+}
+
+function resolveCategory(raw){
+  const norm = normalizeVN(raw);
+  if(!norm) return "other";
+  const found = CATEGORIES.find(function(c){
+    return normalizeVN(c.vi)===norm || normalizeVN(c.en)===norm || c.slug===norm.replace(/\s+/g,'-');
+  });
+  return found ? found.slug : "other";
+}
+
+function categoryLabel(slug){
+  const c = CATEGORIES.find(function(c){return c.slug===slug}) || CATEGORIES[CATEGORIES.length-1];
+  return lang==='vi' ? c.vi : c.en;
+}
+
+/* ================================================================
    GIAO DIEN SONG NGU (chu co dinh). Mac dinh EN, them ?vn -> VI.
    ================================================================ */
 const UI = {
-  en:{searchPh:"Search stores, products, codes...",navAll:"All",navPhys:"Physical",navDig:"Digital",
+  en:{searchPh:"Search stores, products, codes...",
     heroTitle:"Latest promo codes, updated every day",
     heroSub:"Verified coupons and vouchers for physical and digital products. Click to reveal the code - no sign-up needed.",
-    chipAll:"All",chipPhys:"Physical products",chipDig:"Digital products",
+    catAllLabel:"All Categories",
     reveal:"Get Code",copy:"Copy",deal:"Get Deal",copied:"Code copied: ",
     empty:"No matching codes. Try another keyword.",loading:"Loading codes...",
     err:"Could not load codes. Please refresh the page.",
@@ -52,10 +95,10 @@ const UI = {
     dealNotFoundSub:"We could not find this deal. Browse all current coupons instead.",
     pageNotFoundTitle:"Page not found",
     pageNotFoundSub:"We could not find this page."},
-  vi:{searchPh:"Tim cua hang, san pham, ma...",navAll:"Tat ca",navPhys:"Vat ly",navDig:"San pham so",
+  vi:{searchPh:"Tim cua hang, san pham, ma...",
     heroTitle:"Ma giam gia moi nhat, cap nhat moi ngay",
     heroSub:"Coupon va voucher da kiem tra cho san pham vat ly lan san pham so. Bam de hien ma - khong can dang ky.",
-    chipAll:"Tat ca",chipPhys:"San pham vat ly",chipDig:"San pham so",
+    catAllLabel:"Tat ca danh muc",
     reveal:"Hien ma",copy:"Sao chep",deal:"Lay uu dai",copied:"Da sao chep ma: ",
     empty:"Khong tim thay ma phu hop.",loading:"Dang tai ma...",
     err:"Khong tai duoc du lieu. Anh kiem tra lai link Sheet nhe.",
@@ -137,8 +180,8 @@ function fetchData(){
   if(!SHEET_COUPONS_URL){
     return Promise.resolve({
       coupons:[
-        {brand:"Sirui",logo:"",productSlug:"",title:"Enjoy Fast Savings 5% Off",desc:"Get Sirui promo code at checkout and enjoy 5% off.",code:"UPA-TAINGUYENNHU",url:"#",discount:"5%",category:"physical"},
-        {brand:"Soulflower",logo:"",productSlug:"",title:"Top Coupon Codes Today",desc:"Save 5% off on all products with Soulflower coupon.",code:"SHMEDIA",url:"#",discount:"5%",category:"physical"}
+        {brand:"Sirui",logo:"",productSlug:"",title:"Enjoy Fast Savings 5% Off",desc:"Get Sirui promo code at checkout and enjoy 5% off.",code:"UPA-TAINGUYENNHU",url:"#",discount:"5%",category:"tech-electronics",image:"",rating:"",review:""},
+        {brand:"Soulflower",logo:"",productSlug:"",title:"Top Coupon Codes Today",desc:"Save 5% off on all products with Soulflower coupon.",code:"SHMEDIA",url:"#",discount:"5%",category:"health-beauty",image:"",rating:"",review:""}
       ],
       brands:[]
     });
@@ -158,7 +201,10 @@ function fetchData(){
         code:(r[COL.code]||"").trim(),
         url:(r[COL.url]||"#").trim(),
         discount:(r[COL.discount]||"").trim(),
-        category:((r[COL.category]||"physical").trim().toLowerCase().indexOf('dig')===0?'digital':'physical')
+        category:resolveCategory(r[COL.category]),
+        image:(r[COL.image]||"").trim(),
+        rating:(r[COL.rating]||"").toString().trim(),
+        review:(r[COL.review]||"").trim()
       };
     }).filter(function(c){return c.brand});
     const brands = rowsB.map(function(r){
@@ -195,7 +241,8 @@ function renderPageContent(raw){
 
 /* Gom cac dong coupon (moi dong = 1 ma) thanh cac SAN PHAM.
    Cac dong cung Brand + "Ma san pham" (hoac cung tieu de neu de trong o
-   Ma san pham) duoc gom vao 1 trang san pham voi nhieu ma. */
+   Ma san pham) duoc gom vao 1 trang san pham voi nhieu ma. Anh/so sao/
+   danh gia chi can dien o 1 dong bat ky trong nhom, cac dong khac de trong. */
 function productKey(brand, productSlugRaw, title){
   return slugify(brand) + '--' + (productSlugRaw ? slugify(productSlugRaw) : slugify(title));
 }
@@ -205,10 +252,14 @@ function groupToProducts(coupons){
   coupons.forEach(function(c){
     const key=productKey(c.brand, c.productSlug, c.title);
     if(!map[key]){
-      map[key]={slug:key, brand:c.brand, logo:c.logo, title:c.title, desc:c.desc, category:c.category, offers:[]};
+      map[key]={slug:key, brand:c.brand, logo:c.logo, title:c.title, desc:c.desc, category:c.category,
+        image:"", rating:"", review:"", offers:[]};
       order.push(key);
     }
     if(!map[key].logo && c.logo) map[key].logo=c.logo;
+    if(!map[key].image && c.image) map[key].image=c.image;
+    if(!map[key].rating && c.rating) map[key].rating=c.rating;
+    if(!map[key].review && c.review) map[key].review=c.review;
     if(c.code || (c.url && c.url!=='#')) map[key].offers.push({code:c.code, discount:c.discount, url:c.url});
   });
   return order.map(function(k){return map[k];}).filter(function(p){return p.offers.length;});
@@ -226,11 +277,10 @@ function renderMarquee(brands, marqueeEl, trackEl){
 /* The card tren trang chu / trang brand: gio la link dan sang trang
    san pham rieng (/product/xxx) de chay Ads, khong hien ma truc tiep nua. */
 function productCardHTML(p, t){
-  const tagTxt=p.category==='digital'?t.chipDig:t.chipPhys;
   const logo=p.logo
     ? '<img class="brand-logo" src="'+p.logo+'" alt="'+p.brand+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'brand-fallback\\\'>'+p.brand.charAt(0)+'</div>\'">'
     : '<div class="brand-fallback">'+p.brand.charAt(0)+'</div>';
-  const tag='<span class="tag '+(p.category==='digital'?'digital':'')+'">'+tagTxt+'</span>';
+  const tag='<span class="tag">'+categoryLabel(p.category)+'</span>';
   const bestDiscount=(p.offers.map(function(o){return o.discount}).filter(Boolean)[0])||'';
   const disc=bestDiscount?'<span class="discount">'+bestDiscount+'</span>':'';
   const btnLabel=p.offers.length>1 ? tpl(t.viewCodesTpl,{n:p.offers.length}) : t.viewDeal;
@@ -244,6 +294,25 @@ function offerRowHTML(offer, t){
     ? '<div class="code-btn" data-code="'+offer.code+'" data-url="'+offer.url+'"><div class="code-text">'+offer.code+'</div><div class="code-action">'+t.reveal+'</div></div>'
     : '<a class="deal-btn" href="'+offer.url+'" target="_blank" rel="nofollow noopener sponsored">'+t.deal+'</a>';
   return '<div class="offer-row">'+disc+'<div style="flex:1">'+action+'</div></div>';
+}
+
+/* Ve thanh sao ty le theo so thap phan (vd 4.5/5), khong can anh. */
+function starsHTML(rating){
+  const num=parseFloat(rating);
+  if(!num || isNaN(num)) return '';
+  const pct=Math.max(0,Math.min(5,num))/5*100;
+  return '<span class="stars" aria-label="'+num+'/5"><span class="stars-bg">★★★★★</span><span class="stars-fill" style="width:'+pct+'%">★★★★★</span></span>';
+}
+
+/* The danh gia san pham (anh + sao + doan review), hien ben canh/duoi
+   danh sach ma tren trang san pham. Chi hien khi Sheet co du lieu. */
+function reviewCardHTML(p){
+  if(!p.rating && !p.review && !p.image) return '';
+  const img=p.image?'<img class="review-img" src="'+p.image+'" alt="'+p.title+'" loading="lazy">':'';
+  const stars=starsHTML(p.rating);
+  const ratingRow=stars?'<div class="rating-row">'+stars+'<span class="rating-num">'+parseFloat(p.rating).toFixed(1)+'/5</span></div>':'';
+  const review=p.review?'<p class="review-text">'+p.review+'</p>':'';
+  return '<aside class="review-card">'+img+ratingRow+review+'</aside>';
 }
 
 /* Mo tab affiliate NGAM phia sau (background tab), khach van o lai trang coupon */
