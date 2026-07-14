@@ -323,6 +323,7 @@ function openAffiliateInBackground(url){
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 
+let affiliateOpenedThisPage=false;
 function attachCodeEvents(gridEl){
   gridEl.addEventListener('click',function(e){
     const btn=e.target.closest('.code-btn');if(!btn)return;
@@ -331,7 +332,10 @@ function attachCodeEvents(gridEl){
       btn.classList.add('revealed');
       btn.querySelector('.code-action').textContent=t.copy;
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
-      openAffiliateInBackground(url);
+      if(!affiliateOpenedThisPage){
+        affiliateOpenedThisPage=true;
+        openAffiliateInBackground(url);
+      }
     }else{
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
     }
