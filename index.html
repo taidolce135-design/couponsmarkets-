@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===== SEO: sua cho dung brand cua anh ===== -->
+<title>Latest Promo Codes & Coupons 2026 | Updated Daily</title>
+<meta name="description" content="Verified promo codes, coupons and vouchers for physical and digital products. Updated daily, no sign-up needed - just click, copy and save.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ten-mien-cua-anh.com/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Latest Promo Codes & Coupons 2026 | Updated Daily">
+<meta property="og:description" content="Verified promo codes for physical and digital products. Updated daily.">
+<meta property="og:url" content="https://ten-mien-cua-anh.com/">
+<meta property="og:image" content="https://ten-mien-cua-anh.com/og-image.png">
+<meta name="theme-color" content="#0f766e">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"CouponVault","url":"https://ten-mien-cua-anh.com/"}
+</script>
+
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap hd">
+    <a href="/" class="logo">Coupon<span>Vault</span></a>
+    <div class="search"><input type="text" id="searchInput" aria-label="Search">
+      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <nav class="nav-cats">
+      <a data-cat="all" class="nav-all"></a>
+      <a data-cat="physical" class="nav-phys"></a>
+      <a data-cat="digital" class="nav-dig"></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <section class="hero"><h1 id="heroTitle"></h1><p id="heroSub"></p></section>
+  </div>
+
+  <div class="marquee" id="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeTrack"></div></div>
+
+  <div class="wrap">
+    <div class="filters" id="filters">
+      <button class="chip active" data-cat="all"></button>
+      <button class="chip" data-cat="physical"></button>
+      <button class="chip" data-cat="digital"></button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><div class="logo" style="margin-bottom:8px">Coupon<span>Vault</span></div><div id="footTag"></div></div>
+      <div>
+        <div style="font-weight:700;color:var(--ink);margin-bottom:8px" id="footInfo"></div>
+        <div><a href="#" id="footAbout"></a></div>
+        <div><a href="#" id="footPrivacy"></a></div>
+        <div><a href="#" id="footTerms"></a></div>
+        <div><a href="#" id="footContact"></a></div>
+      </div>
+    </div>
+    <p class="foot-note" id="footNote"></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="/assets/data.js"></script>
+<script>
+const grid=document.getElementById('grid');
+let activeCat='all', query='', COUPONS=[], BRANDS=[];
+
+function applyUI(){
+  const t=UI[lang];
+  document.documentElement.lang=lang;
+  document.getElementById('searchInput').placeholder=t.searchPh;
+  document.querySelector('.nav-all').textContent=t.navAll;
+  document.querySelector('.nav-phys').textContent=t.navPhys;
+  document.querySelector('.nav-dig').textContent=t.navDig;
+  document.getElementById('heroTitle').textContent=t.heroTitle;
+  document.getElementById('heroSub').textContent=t.heroSub;
+  document.querySelector('.chip[data-cat="all"]').textContent=t.chipAll;
+  document.querySelector('.chip[data-cat="physical"]').textContent=t.chipPhys;
+  document.querySelector('.chip[data-cat="digital"]').textContent=t.chipDig;
+  applyFooterUI(t);
+}
+
+function loadData(){
+  const t=UI[lang];
+  grid.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
+  fetchData().then(function(data){
+    COUPONS=data.coupons; BRANDS=data.brands;
+    renderMarquee(BRANDS, document.getElementById('marquee'), document.getElementById('marqueeTrack'));
+    render();
+    if(COUPONS.length) injectJsonLd(buildCouponJsonLd(COUPONS), 'coupons-jsonld');
+  }).catch(function(e){
+    grid.innerHTML='<div class="state">'+t.err+'</div>';
+    console.error(e);
+  });
+}
+
+function render(){
+  const t=UI[lang];
+  const list=COUPONS.filter(function(c){
+    const okCat=activeCat==='all'||c.category===activeCat;
+    const q=query.toLowerCase();
+    const okQ=!q||(c.brand+c.title).toLowerCase().includes(q);
+    return okCat&&okQ;
+  });
+  if(!list.length){grid.innerHTML='<div class="state">'+t.empty+'</div>';return;}
+  grid.innerHTML=list.map(function(c){return cardHTML(c,t)}).join('');
+}
+
+attachCodeEvents(grid);
+
+function bindCat(el){
+  activeCat=el.dataset.cat;
+  document.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('active',c.dataset.cat===activeCat)});
+  render();
+}
+document.getElementById('filters').addEventListener('click',function(e){const chip=e.target.closest('.chip');if(chip)bindCat(chip)});
+document.querySelectorAll('.nav-cats a').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();bindCat(a)})});
+document.getElementById('searchInput').addEventListener('input',function(e){query=e.target.value;render()});
+
+applyUI();
+loadData();
+</script>
+</body>
+</html>

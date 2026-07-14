@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ten-mien-cua-anh.com/sitemap.xml

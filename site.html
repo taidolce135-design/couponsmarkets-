@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Cac the SEO duoi day duoc JS ghi de theo tung brand sau khi tai du lieu -->
+<title id="metaTitle">Store Coupons & Promo Codes 2026</title>
+<meta id="metaDesc" name="description" content="Verified coupons and promo codes, updated regularly.">
+<meta name="robots" content="index, follow">
+<link id="metaCanonical" rel="canonical" href="https://ten-mien-cua-anh.com/site/">
+
+<meta id="ogTitle" property="og:type" content="website">
+<meta id="ogTitleTag" property="og:title" content="Store Coupons & Promo Codes 2026">
+<meta id="ogDesc" property="og:description" content="Verified coupons and promo codes, updated regularly.">
+<meta id="ogUrl" property="og:url" content="https://ten-mien-cua-anh.com/site/">
+<meta name="theme-color" content="#0f766e">
+
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap hd">
+    <a href="/" class="logo">Coupon<span>Vault</span></a>
+    <div class="search"><input type="text" id="searchInput" aria-label="Search">
+      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <nav class="nav-cats">
+      <a href="/" data-cat="all" class="nav-all"></a>
+      <a href="/" data-cat="physical" class="nav-phys"></a>
+      <a href="/" data-cat="digital" class="nav-dig"></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="/" id="breadcrumbHome"></a><span>/</span><span id="breadcrumbBrand"></span></p>
+    <section class="store-hero" id="storeHero"></section>
+  </div>
+
+  <div class="wrap">
+    <div class="grid" id="grid"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><div class="logo" style="margin-bottom:8px">Coupon<span>Vault</span></div><div id="footTag"></div></div>
+      <div>
+        <div style="font-weight:700;color:var(--ink);margin-bottom:8px" id="footInfo"></div>
+        <div><a href="#" id="footAbout"></a></div>
+        <div><a href="#" id="footPrivacy"></a></div>
+        <div><a href="#" id="footTerms"></a></div>
+        <div><a href="#" id="footContact"></a></div>
+      </div>
+    </div>
+    <p class="foot-note" id="footNote"></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="/assets/data.js"></script>
+<script>
+const grid=document.getElementById('grid');
+
+/* Lay slug tu duong dan dep /site/xxx (can rule redirect o hosting, xem _redirects / vercel.json).
+   Neu mo truc tiep site.html (test cuc bo), dung ?store=xxx thay the. */
+function currentSlug(){
+  const parts=location.pathname.split('/').filter(Boolean);
+  const i=parts.indexOf('site');
+  if(i!==-1 && parts[i+1]) return decodeURIComponent(parts[i+1]).toLowerCase();
+  const p=new URLSearchParams(location.search);
+  if(p.has('store')) return p.get('store').toLowerCase();
+  return '';
+}
+
+function applyStaticUI(t){
+  document.documentElement.lang=lang;
+  document.getElementById('searchInput').placeholder=t.searchPh;
+  document.querySelector('.nav-all').textContent=t.navAll;
+  document.querySelector('.nav-phys').textContent=t.navPhys;
+  document.querySelector('.nav-dig').textContent=t.navDig;
+  document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
+  applyFooterUI(t);
+}
+
+function renderNotFound(t){
+  document.getElementById('breadcrumbBrand').textContent='';
+  document.getElementById('storeHero').innerHTML=
+    '<div><h1>'+t.storeNotFoundTitle+'</h1><p>'+t.storeNotFoundSub+' <a href="/" style="color:var(--brand);font-weight:700">'+t.backHome+'</a></p></div>';
+  grid.innerHTML='';
+}
+
+function renderStore(brand, coupons, t){
+  const logoUrl=(coupons.find(function(c){return c.logo})||{}).logo||'';
+  document.getElementById('breadcrumbBrand').textContent=brand;
+  const logoHTML=logoUrl
+    ? '<img src="'+logoUrl+'" alt="'+brand+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fallback\\\'>'+brand.charAt(0)+'</div>\'">'
+    : '<div class="fallback">'+brand.charAt(0)+'</div>';
+  document.getElementById('storeHero').innerHTML=
+    logoHTML+'<div><h1>'+brand+'</h1><p>'+tpl(t.storeSub,{brand:brand})+'</p></div>';
+  grid.innerHTML=coupons.map(function(c){return cardHTML(c,t,{linkBrand:false})}).join('');
+
+  const slug=slugify(brand);
+  const url=location.origin+'/site/'+slug;
+  document.getElementById('metaTitle').textContent=tpl(t.storeTitle,{brand:brand});
+  document.getElementById('metaDesc').setAttribute('content',tpl(t.storeMetaDesc,{brand:brand}));
+  document.getElementById('metaCanonical').setAttribute('href',url);
+  document.getElementById('ogTitleTag').setAttribute('content',tpl(t.storeTitle,{brand:brand}));
+  document.getElementById('ogDesc').setAttribute('content',tpl(t.storeMetaDesc,{brand:brand}));
+  document.getElementById('ogUrl').setAttribute('content',url);
+
+  injectJsonLd({
+    "@context":"https://schema.org",
+    "@type":"CollectionPage",
+    "name": tpl(t.storeTitle,{brand:brand}),
+    "url": url,
+    "about":{"@type":"Organization","name":brand},
+    "mainEntity":{
+      "@type":"ItemList",
+      "itemListElement": coupons.map(function(c,i){
+        return {"@type":"ListItem","position":i+1,"item":{
+          "@type":"Offer","name":c.title,"description":c.desc,"url":url,
+          "category":c.category,"seller":{"@type":"Organization","name":brand}
+        }};
+      })
+    }
+  }, 'store-jsonld');
+}
+
+attachCodeEvents(grid);
+
+const t=UI[lang];
+applyStaticUI(t);
+const slug=currentSlug();
+grid.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
+
+fetchData().then(function(data){
+  const coupons=data.coupons.filter(function(c){return slugify(c.brand)===slug});
+  if(!slug || !coupons.length){renderNotFound(t);return;}
+  renderStore(coupons[0].brand, coupons, t);
+}).catch(function(e){
+  grid.innerHTML='<div class="state">'+t.err+'</div>';
+  console.error(e);
+});
+</script>
+</body>
+</html>
