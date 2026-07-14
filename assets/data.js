@@ -308,11 +308,13 @@ function starsHTML(rating){
    danh sach ma tren trang san pham. Chi hien khi Sheet co du lieu. */
 function reviewCardHTML(p){
   if(!p.rating && !p.review && !p.image) return '';
-  const img=p.image?'<img class="review-img" src="'+p.image+'" alt="'+p.title+'" loading="lazy">':'';
+  const logoBox=p.logo?'<div class="review-logo-box"><img src="'+p.logo+'" alt="'+p.brand+'"></div>':'';
   const stars=starsHTML(p.rating);
   const ratingRow=stars?'<div class="rating-row">'+stars+'<span class="rating-num">'+parseFloat(p.rating).toFixed(1)+'/5</span></div>':'';
+  const divider=(p.rating||p.review)?'<hr class="review-divider">':'';
+  const img=p.image?'<img class="review-img" src="'+p.image+'" alt="'+p.title+'" loading="lazy">':'';
   const review=p.review?'<p class="review-text">'+p.review+'</p>':'';
-  return '<aside class="review-card">'+img+ratingRow+review+'</aside>';
+  return '<aside class="review-card">'+logoBox+'<div class="review-brand">'+p.brand+'</div>'+ratingRow+divider+img+review+'</aside>';
 }
 
 /* Mo link affiliate o tab moi (giong het nut "Get Deal"). Trinh duyet khong

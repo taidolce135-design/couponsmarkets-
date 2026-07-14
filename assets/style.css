@@ -1,8 +1,9 @@
 :root{
   --bg:#f8fafc; --card:#ffffff; --ink:#0f172a; --muted:#64748b;
-  --line:#e2e8f0; --brand:#0f766e; --brand-dark:#0d5f57; --accent:#f59e0b;
+  --line:#e2e8f0; --brand:#3DAF1F; --brand-dark:#2F8718; --accent:#f59e0b;
   --code-bg:#fffbeb; --code-border:#fcd34d; --radius:14px;
   --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.05);
+  --footer-bg:#0f172a; --footer-text:#94a3b8; --footer-heading:#f1f5f9;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -73,7 +74,7 @@ header{background:var(--card);border-bottom:1px solid var(--line);position:stick
 .brand-logo{width:52px;height:52px;border-radius:10px;object-fit:contain;background:#fff;border:1px solid var(--line);padding:6px;flex-shrink:0}
 .brand-fallback{width:52px;height:52px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);font-weight:800;color:var(--brand);font-size:18px}
 .discount{margin-left:auto;background:var(--accent);color:#fff;font-weight:800;font-size:13px;padding:5px 10px;border-radius:8px;white-space:nowrap}
-.tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--brand);background:#ccfbf1;padding:3px 8px;border-radius:6px;margin-bottom:8px;width:fit-content}
+.tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--brand-dark);background:#dcfce7;padding:3px 8px;border-radius:6px;margin-bottom:8px;width:fit-content}
 .card h3{font-size:16px;line-height:1.35;margin-bottom:6px}
 .card .brand-name{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
 .card .brand-name a:hover{color:var(--brand)}
@@ -84,17 +85,18 @@ header{background:var(--card);border-bottom:1px solid var(--line);position:stick
 .code-btn.revealed .code-text{filter:none;letter-spacing:.12em}
 .code-btn .code-action{background:var(--brand);color:#fff;padding:0 18px;display:flex;align-items:center;font-weight:700;font-size:13px;white-space:nowrap}
 .code-btn:hover .code-action{background:var(--brand-dark)}
-.code-btn.revealed .code-action{background:#16a34a}
+.code-btn.revealed .code-action{background:var(--brand-dark)}
 .deal-btn{height:46px;border-radius:10px;background:var(--brand);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
 .deal-btn:hover{background:var(--brand-dark)}
 .state{text-align:center;padding:60px 20px;color:var(--muted);grid-column:1/-1}
 .spinner{width:32px;height:32px;border:3px solid var(--line);border-top-color:var(--brand);border-radius:50%;margin:0 auto 14px;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-footer{background:#fff;border-top:1px solid var(--line);padding:32px 0;margin-top:20px}
-.foot{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;font-size:14px;color:var(--muted)}
-.foot a{color:var(--muted)}.foot a:hover{color:var(--brand)}
-.foot-note{font-size:12px;color:var(--muted);margin-top:20px;line-height:1.6}
+footer{background:var(--footer-bg);padding:36px 0;margin-top:20px}
+.foot{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;font-size:14px;color:var(--footer-text)}
+.foot a{color:var(--footer-text)}.foot a:hover{color:#fff}
+.foot-note{font-size:12px;color:var(--footer-text);margin-top:20px;line-height:1.6;opacity:.85}
+footer .logo-img{background:#fff;border-radius:10px;padding:6px 10px}
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s;z-index:100}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -106,13 +108,17 @@ footer{background:#fff;border-top:1px solid var(--line);padding:32px 0;margin-to
 .offer-row .discount{margin-left:0;flex-shrink:0}
 .product-desc{max-width:640px;color:var(--muted);font-size:15px;margin-bottom:28px}
 
-.review-card{flex:1;min-width:260px;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
-.review-img{width:100%;border-radius:10px;object-fit:cover;max-height:200px;margin-bottom:14px}
-.rating-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.review-card{flex:1;min-width:260px;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.review-logo-box{display:inline-flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 18px;margin-bottom:14px;max-width:100%}
+.review-logo-box img{max-height:40px;max-width:180px;object-fit:contain;display:block}
+.review-brand{font-size:18px;font-weight:800;margin-bottom:8px}
+.review-img{width:100%;border-radius:10px;object-fit:cover;max-height:200px;margin:14px 0}
+.rating-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
 .rating-num{font-weight:700;font-size:14px;color:var(--ink)}
 .stars{position:relative;display:inline-block;font-size:18px;line-height:1;color:var(--line);letter-spacing:2px}
 .stars-bg{color:var(--line)}
 .stars-fill{position:absolute;top:0;left:0;overflow:hidden;white-space:nowrap;color:var(--accent)}
+.review-divider{border:none;border-top:1px solid var(--line);margin:0 0 16px}
 .review-text{font-size:14px;color:var(--muted);line-height:1.6}
 
 .page-content{max-width:720px;padding:8px 0 60px;line-height:1.75}
