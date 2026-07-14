@@ -37,8 +37,8 @@ header{background:var(--card);border-bottom:1px solid var(--line);position:stick
 .breadcrumb span{margin:0 6px}
 
 .store-hero{display:flex;align-items:center;gap:16px;padding:20px 0 26px}
-.store-hero img{width:80px;height:80px;border-radius:12px;object-fit:contain;background:#fff;border:1px solid var(--line);padding:10px;flex-shrink:0}
-.store-hero .fallback{width:80px;height:80px;border-radius:12px;flex-shrink:0;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);font-weight:800;color:var(--brand);font-size:28px}
+.store-hero img{width:100px;height:100px;border-radius:12px;object-fit:contain;background:#fff;border:1px solid var(--line);padding:12px;flex-shrink:0}
+.store-hero .fallback{width:100px;height:100px;border-radius:12px;flex-shrink:0;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);font-weight:800;color:var(--brand);font-size:32px}
 .store-hero h1{font-size:26px;line-height:1.25}
 .store-hero p{color:var(--muted);font-size:15px;margin-top:4px}
 
@@ -82,13 +82,13 @@ header{background:var(--card);border-bottom:1px solid var(--line);position:stick
 .card .brand-name a:hover{color:var(--brand)}
 .card .desc{font-size:14px;color:var(--muted);margin-bottom:16px;flex:1}
 
-.code-btn{position:relative;display:flex;align-items:stretch;height:54px;border-radius:10px;overflow:hidden;border:2px dashed var(--code-border);background:var(--code-bg);cursor:pointer}
-.code-btn .code-text{flex:1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;letter-spacing:.08em;color:var(--ink);filter:blur(4px);transition:filter .15s;user-select:none}
+.code-btn{position:relative;display:flex;align-items:stretch;height:64px;border-radius:12px;overflow:hidden;border:2px dashed var(--code-border);background:var(--code-bg);cursor:pointer}
+.code-btn .code-text{flex:1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px;letter-spacing:.08em;color:var(--ink);filter:blur(4px);transition:filter .15s;user-select:none}
 .code-btn.revealed .code-text{filter:none;letter-spacing:.12em}
-.code-btn .code-action{background:var(--brand);color:#fff;padding:0 22px;display:flex;align-items:center;font-weight:700;font-size:14px;white-space:nowrap}
+.code-btn .code-action{background:var(--brand);color:#fff;padding:0 26px;display:flex;align-items:center;font-weight:700;font-size:16px;white-space:nowrap}
 .code-btn:hover .code-action{background:var(--brand-dark)}
 .code-btn.revealed .code-action{background:var(--brand-dark)}
-.deal-btn{height:54px;border-radius:10px;background:var(--brand);color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center}
+.deal-btn{height:64px;border-radius:12px;background:var(--brand);color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center}
 .deal-btn:hover{background:var(--brand-dark)}
 .state{text-align:center;padding:60px 20px;color:var(--muted);grid-column:1/-1}
 .spinner{width:32px;height:32px;border:3px solid var(--line);border-top-color:var(--brand);border-radius:50%;margin:0 auto 14px;animation:spin .8s linear infinite}
@@ -111,8 +111,8 @@ footer .logo-img{background:#fff;border-radius:10px;padding:6px 10px}
 .product-desc{max-width:640px;color:var(--muted);font-size:15px;margin-bottom:28px}
 
 .review-card{flex:1;min-width:260px;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
-.review-logo-box{display:inline-flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 18px;margin-bottom:14px;max-width:100%}
-.review-logo-box img{max-height:40px;max-width:180px;object-fit:contain;display:block}
+.review-logo-box{display:inline-flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 20px;margin-bottom:14px;max-width:100%}
+.review-logo-box img{max-height:52px;max-width:200px;object-fit:contain;display:block}
 .review-brand{font-size:18px;font-weight:800;margin-bottom:8px}
 .review-img{width:100%;border-radius:10px;object-fit:cover;max-height:200px;margin:14px 0}
 .rating-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
