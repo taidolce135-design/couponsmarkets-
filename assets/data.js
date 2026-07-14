@@ -203,7 +203,7 @@ function fetchData(){
         discount:(r[COL.discount]||"").trim(),
         category:resolveCategory(r[COL.category]),
         image:(r[COL.image]||"").trim(),
-        rating:(r[COL.rating]||"").toString().trim(),
+        rating:(r[COL.rating]||"").toString().trim().replace(',', '.'),
         review:(r[COL.review]||"").trim()
       };
     }).filter(function(c){return c.brand});
