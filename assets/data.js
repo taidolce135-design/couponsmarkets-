@@ -315,16 +315,12 @@ function reviewCardHTML(p){
   return '<aside class="review-card">'+img+ratingRow+review+'</aside>';
 }
 
-/* Mo tab affiliate NGAM phia sau (background tab), khach van o lai trang coupon */
+/* Mo link affiliate o tab moi (giong het nut "Get Deal"). Trinh duyet khong
+   cho phep JS ep mo tab nen thuc su (chi hoat dong khi khach tu giu Ctrl/Cmd
+   that su bam) nen dung cach mo tab chuan, on dinh tren moi trinh duyet. */
 function openAffiliateInBackground(url){
   if(!url||url.indexOf('#')===0)return;
-  const a=document.createElement('a');
-  a.href=url; a.target='_blank'; a.rel='nofollow noopener sponsored';
-  a.style.display='none'; document.body.appendChild(a);
-  const ev=new MouseEvent('click',{ctrlKey:true,metaKey:true,button:1,bubbles:false});
-  a.dispatchEvent(ev);
-  document.body.removeChild(a);
-  setTimeout(function(){window.focus();},0);
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 function attachCodeEvents(gridEl){
