@@ -75,7 +75,8 @@ header{background:var(--card);border-bottom:1px solid var(--line);position:stick
 .card-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
 .brand-logo{width:60px;height:60px;border-radius:10px;object-fit:contain;background:#fff;border:1px solid var(--line);padding:7px;flex-shrink:0}
 .brand-fallback{width:60px;height:60px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);font-weight:800;color:var(--brand);font-size:20px}
-.discount{margin-left:auto;background:var(--accent);color:#fff;font-weight:800;font-size:13px;padding:5px 10px;border-radius:8px;white-space:nowrap}
+.discount{margin-left:auto;background:var(--accent);color:#fff;font-weight:800;font-size:13px;padding:6px 13px;border-radius:999px;white-space:nowrap;min-width:44px;text-align:center;box-shadow:0 2px 6px rgba(245,158,11,.35)}
+.card-top .discount{font-size:11px;padding:4px 9px;min-width:0;box-shadow:none}
 .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--brand-dark);background:#dcfce7;padding:3px 8px;border-radius:6px;margin-bottom:8px;width:fit-content}
 .card h3{font-size:16px;line-height:1.35;margin-bottom:6px}
 .card .brand-name{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
