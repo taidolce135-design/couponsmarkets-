@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Cac the SEO duoi day duoc JS ghi de theo tung san pham sau khi tai du lieu -->
+<title id="metaTitle">Coupon Code 2026</title>
+<meta id="metaDesc" name="description" content="Verified coupon code, updated regularly.">
+<meta name="robots" content="index, follow">
+<link id="metaCanonical" rel="canonical" href="https://couponsmarkets.com/">
+
+<meta id="ogTitleTag" property="og:title" content="Coupon Code 2026">
+<meta id="ogDesc" property="og:description" content="Verified coupon code, updated regularly.">
+<meta id="ogUrl" property="og:url" content="https://couponsmarkets.com/">
+<meta name="theme-color" content="#0f766e">
+
+<link rel="stylesheet" href="/assets/style.css?v=2">
+</head>
+<body>
+
+<header>
+  <div class="wrap hd">
+    <a href="/" class="logo">Coupon<span>Vault</span></a>
+    <div class="search"><input type="text" id="searchInput" aria-label="Search">
+      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <nav class="nav-cats">
+      <a href="/" data-cat="all" class="nav-all"></a>
+      <a href="/" data-cat="physical" class="nav-phys"></a>
+      <a href="/" data-cat="digital" class="nav-dig"></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <p class="breadcrumb">
+      <a href="/" id="breadcrumbHome"></a><span>/</span>
+      <a href="/" id="breadcrumbBrand"></a><span>/</span>
+      <span id="breadcrumbProduct"></span>
+    </p>
+    <section class="store-hero" id="productHero"></section>
+    <p class="product-desc" id="productDesc"></p>
+    <div class="offers" id="offers">
+      <h2 id="codesHeading"></h2>
+      <div id="offersList"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><div class="logo" style="margin-bottom:8px">Coupon<span>Vault</span></div><div id="footTag"></div></div>
+      <div>
+        <div style="font-weight:700;color:var(--ink);margin-bottom:8px" id="footInfo"></div>
+        <div><a href="/about" id="footAbout"></a></div>
+        <div><a href="/privacy-policy" id="footPrivacy"></a></div>
+        <div><a href="/terms-of-use" id="footTerms"></a></div>
+        <div><a href="/contact" id="footContact"></a></div>
+      </div>
+    </div>
+    <p class="foot-note" id="footNote"></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="/assets/data.js?v=2"></script>
+<script>
+const offersList=document.getElementById('offersList');
+
+function currentProductSlug(){
+  const parts=location.pathname.split('/').filter(Boolean);
+  const i=parts.indexOf('product');
+  if(i!==-1 && parts[i+1]) return decodeURIComponent(parts[i+1]).toLowerCase();
+  const p=new URLSearchParams(location.search);
+  if(p.has('slug')) return p.get('slug').toLowerCase();
+  return '';
+}
+
+function applyStaticUI(t){
+  document.documentElement.lang=lang;
+  document.getElementById('searchInput').placeholder=t.searchPh;
+  document.querySelector('.nav-all').textContent=t.navAll;
+  document.querySelector('.nav-phys').textContent=t.navPhys;
+  document.querySelector('.nav-dig').textContent=t.navDig;
+  document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
+  document.getElementById('codesHeading').textContent=t.codesHeading;
+  applyFooterUI(t);
+}
+
+function renderNotFound(t){
+  document.getElementById('breadcrumbBrand').style.display='none';
+  document.getElementById('breadcrumbProduct').textContent='';
+  document.getElementById('productHero').innerHTML=
+    '<div><h1>'+t.dealNotFoundTitle+'</h1><p>'+t.dealNotFoundSub+' <a href="/" style="color:var(--brand);font-weight:700">'+t.backHome+'</a></p></div>';
+  document.getElementById('offers').style.display='none';
+}
+
+function renderProduct(p, t){
+  const logoHTML=p.logo
+    ? '<img src="'+p.logo+'" alt="'+p.brand+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fallback\\\'>'+p.brand.charAt(0)+'</div>\'">'
+    : '<div class="fallback">'+p.brand.charAt(0)+'</div>';
+
+  const brandUrl='/site/'+slugify(p.brand);
+  document.getElementById('breadcrumbBrand').textContent=p.brand;
+  document.getElementById('breadcrumbBrand').href=brandUrl;
+  document.getElementById('breadcrumbProduct').textContent=p.title;
+  document.getElementById('productHero').innerHTML=logoHTML+'<div><h1>'+p.title+'</h1><p>'+p.brand+'</p></div>';
+  document.getElementById('productDesc').textContent=p.desc;
+  offersList.innerHTML=p.offers.map(function(o){return offerRowHTML(o,t)}).join('');
+
+  const url=location.origin+'/product/'+p.slug;
+  const title=tpl(t.productTitleTpl,{title:p.title,brand:p.brand});
+  const desc=tpl(t.productMetaDescTpl,{title:p.title,brand:p.brand});
+  document.getElementById('metaTitle').textContent=title;
+  document.getElementById('metaDesc').setAttribute('content',desc);
+  document.getElementById('metaCanonical').setAttribute('href',url);
+  document.getElementById('ogTitleTag').setAttribute('content',title);
+  document.getElementById('ogDesc').setAttribute('content',desc);
+  document.getElementById('ogUrl').setAttribute('content',url);
+
+  injectJsonLd({
+    "@context":"https://schema.org",
+    "@type":"Product",
+    "name": p.title,
+    "description": p.desc,
+    "brand":{"@type":"Brand","name":p.brand},
+    "url": url,
+    "offers": p.offers.map(function(o){
+      return {"@type":"Offer","url":url,"availability":"https://schema.org/InStock","category":p.category};
+    })
+  }, 'product-jsonld');
+}
+
+attachCodeEvents(offersList);
+
+const t=UI[lang];
+applyStaticUI(t);
+const slug=currentProductSlug();
+offersList.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
+
+fetchData().then(function(data){
+  const products=groupToProducts(data.coupons);
+  const product=products.find(function(p){return p.slug===slug});
+  if(!slug || !product){renderNotFound(t);return;}
+  renderProduct(product, t);
+}).catch(function(e){
+  offersList.innerHTML='<div class="state">'+t.err+'</div>';
+  console.error(e);
+});
+</script>
+</body>
+</html>

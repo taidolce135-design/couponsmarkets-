@@ -1,23 +1,71 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- File nay duoc tao/cap nhat tu dong boi generate-sitemap.ps1.
-     Sau khi them brand moi vao Sheet, chay lai script do de cap nhat danh sach /site/xxx roi upload lai. -->
+     Sau khi them brand/san pham moi vao Sheet, chay lai script do roi upload lai sitemap.xml. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ten-mien-cua-anh.com/</loc>
+    <loc>https://couponsmarkets.com/</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://ten-mien-cua-anh.com/site/sirui</loc>
+    <loc>https://couponsmarkets.com/about</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://couponsmarkets.com/privacy-policy</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://couponsmarkets.com/terms-of-use</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://couponsmarkets.com/contact</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://couponsmarkets.com/site/anhtai</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://ten-mien-cua-anh.com/site/soulflower</loc>
+    <loc>https://couponsmarkets.com/site/sirui</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://couponsmarkets.com/site/soulflower</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://couponsmarkets.com/product/sirui--</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://couponsmarkets.com/product/soulflower--</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://couponsmarkets.com/product/anhtai--</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

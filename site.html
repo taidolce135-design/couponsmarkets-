@@ -8,15 +8,15 @@
 <title id="metaTitle">Store Coupons & Promo Codes 2026</title>
 <meta id="metaDesc" name="description" content="Verified coupons and promo codes, updated regularly.">
 <meta name="robots" content="index, follow">
-<link id="metaCanonical" rel="canonical" href="https://ten-mien-cua-anh.com/site/">
+<link id="metaCanonical" rel="canonical" href="https://couponsmarkets.com/site/">
 
 <meta id="ogTitle" property="og:type" content="website">
 <meta id="ogTitleTag" property="og:title" content="Store Coupons & Promo Codes 2026">
 <meta id="ogDesc" property="og:description" content="Verified coupons and promo codes, updated regularly.">
-<meta id="ogUrl" property="og:url" content="https://ten-mien-cua-anh.com/site/">
+<meta id="ogUrl" property="og:url" content="https://couponsmarkets.com/site/">
 <meta name="theme-color" content="#0f766e">
 
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/style.css?v=2">
 </head>
 <body>
 
@@ -51,10 +51,10 @@
       <div><div class="logo" style="margin-bottom:8px">Coupon<span>Vault</span></div><div id="footTag"></div></div>
       <div>
         <div style="font-weight:700;color:var(--ink);margin-bottom:8px" id="footInfo"></div>
-        <div><a href="#" id="footAbout"></a></div>
-        <div><a href="#" id="footPrivacy"></a></div>
-        <div><a href="#" id="footTerms"></a></div>
-        <div><a href="#" id="footContact"></a></div>
+        <div><a href="/about" id="footAbout"></a></div>
+        <div><a href="/privacy-policy" id="footPrivacy"></a></div>
+        <div><a href="/terms-of-use" id="footTerms"></a></div>
+        <div><a href="/contact" id="footContact"></a></div>
       </div>
     </div>
     <p class="foot-note" id="footNote"></p>
@@ -63,7 +63,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js"></script>
+<script src="/assets/data.js?v=2"></script>
 <script>
 const grid=document.getElementById('grid');
 
@@ -95,15 +95,15 @@ function renderNotFound(t){
   grid.innerHTML='';
 }
 
-function renderStore(brand, coupons, t){
-  const logoUrl=(coupons.find(function(c){return c.logo})||{}).logo||'';
+function renderStore(brand, products, t){
+  const logoUrl=(products.find(function(p){return p.logo})||{}).logo||'';
   document.getElementById('breadcrumbBrand').textContent=brand;
   const logoHTML=logoUrl
     ? '<img src="'+logoUrl+'" alt="'+brand+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fallback\\\'>'+brand.charAt(0)+'</div>\'">'
     : '<div class="fallback">'+brand.charAt(0)+'</div>';
   document.getElementById('storeHero').innerHTML=
     logoHTML+'<div><h1>'+brand+'</h1><p>'+tpl(t.storeSub,{brand:brand})+'</p></div>';
-  grid.innerHTML=coupons.map(function(c){return cardHTML(c,t,{linkBrand:false})}).join('');
+  grid.innerHTML=products.map(function(p){return productCardHTML(p,t)}).join('');
 
   const slug=slugify(brand);
   const url=location.origin+'/site/'+slug;
@@ -122,17 +122,15 @@ function renderStore(brand, coupons, t){
     "about":{"@type":"Organization","name":brand},
     "mainEntity":{
       "@type":"ItemList",
-      "itemListElement": coupons.map(function(c,i){
+      "itemListElement": products.map(function(p,i){
         return {"@type":"ListItem","position":i+1,"item":{
-          "@type":"Offer","name":c.title,"description":c.desc,"url":url,
-          "category":c.category,"seller":{"@type":"Organization","name":brand}
+          "@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/product/'+p.slug,
+          "category":p.category,"seller":{"@type":"Organization","name":brand}
         }};
       })
     }
   }, 'store-jsonld');
 }
-
-attachCodeEvents(grid);
 
 const t=UI[lang];
 applyStaticUI(t);
@@ -140,9 +138,9 @@ const slug=currentSlug();
 grid.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
 
 fetchData().then(function(data){
-  const coupons=data.coupons.filter(function(c){return slugify(c.brand)===slug});
-  if(!slug || !coupons.length){renderNotFound(t);return;}
-  renderStore(coupons[0].brand, coupons, t);
+  const products=groupToProducts(data.coupons).filter(function(p){return slugify(p.brand)===slug});
+  if(!slug || !products.length){renderNotFound(t);return;}
+  renderStore(products[0].brand, products, t);
 }).catch(function(e){
   grid.innerHTML='<div class="state">'+t.err+'</div>';
   console.error(e);

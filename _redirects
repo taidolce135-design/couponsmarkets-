@@ -1,1 +1,6 @@
-/site/*  /site.html  200
+/site/*     /site.html      200
+/product/*  /product.html   200
+/about            /page.html   200
+/privacy-policy   /page.html   200
+/terms-of-use     /page.html   200
+/contact          /page.html   200
