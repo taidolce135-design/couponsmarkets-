@@ -373,7 +373,7 @@ function offerRowHTML(offer, t, ctx){
     return '<div class="offer-card">'+left
       +'<div class="offer-card-mid">'+badges+'<div class="code-preview">'+escapeHTML(offer.code)+'</div></div>'
       +'<div class="offer-cta-group">'
-        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'">'+escapeHTML(t.reveal)+'</button>'
+        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'" data-url="'+escapeHTML(offer.url)+'">'+escapeHTML(t.reveal)+'</button>'
         +'<a class="offer-visit-link" href="'+escapeHTML(offer.url)+'" target="_blank" rel="nofollow noopener sponsored">'+escapeHTML(t.visitStore)+'</a>'
       +'</div>'
       +'</div>';
@@ -405,16 +405,18 @@ function reviewCardHTML(p){
   return '<aside class="review-card">'+logoBox+'<div class="review-brand">'+escapeHTML(p.brand)+'</div>'+ratingRow+divider+img+review+'</aside>';
 }
 
-/* QUAN TRONG: KHONG dung window.open()/redirect bang JS khi khach bam nut nua.
-   Google Ads da danh dau trang la "Trang web bi xam pham" vi hanh vi tu dong
-   mo tab/chuyen huong bang script giong dau hieu ma doc/hijack. Gio moi lien
-   ket sang trang affiliate la the <a href target=_blank> that, khach tu bam,
-   khong co script nao can thiep - giong het cach nut "Get Deal" da lam dung
-   tu truoc. */
+/* Mo link affiliate o tab moi khi khach lan dau hien ma, khach van o lai
+   trang coupon. Chi mo 1 lan / 1 luot xem trang (khong mo lai o ma thu 2). */
+function openAffiliateInBackground(url){
+  if(!url||url.indexOf('#')===0)return;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+let affiliateOpenedThisPage=false;
 function attachCodeEvents(gridEl){
   gridEl.addEventListener('click',function(e){
     const btn=e.target.closest('.code-btn');if(!btn)return;
-    const code=btn.dataset.code,t=UI[lang];
+    const code=btn.dataset.code,url=btn.dataset.url,t=UI[lang];
     const card=btn.closest('.offer-card');
     const preview=card?card.querySelector('.code-preview'):null;
     if(!btn.classList.contains('revealed')){
@@ -422,6 +424,10 @@ function attachCodeEvents(gridEl){
       if(preview)preview.classList.add('revealed');
       btn.textContent=t.copy;
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
+      if(!affiliateOpenedThisPage){
+        affiliateOpenedThisPage=true;
+        openAffiliateInBackground(url);
+      }
     }else{
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
     }
