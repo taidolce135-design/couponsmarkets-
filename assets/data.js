@@ -167,6 +167,46 @@ function tpl(str, vars){
   return str.replace(/\{(\w+)\}/g, function(_, k){ return vars[k]!==undefined ? vars[k] : ''; });
 }
 
+/* Escape du lieu tu Google Sheet truoc khi chen vao HTML, tranh XSS
+   (ai do sua Sheet chua the <script> hoac dau nhay pha vo thuoc tinh). */
+function escapeHTML(s){
+  return (s==null?'':String(s))
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+/* Nhan biet dong bat dau bang emoji (cac khoi Unicode emoji pho bien). */
+function isEmojiLine(line){
+  return /^[\u{1F000}-\u{1FFFF}\u{2190}-\u{27BF}\u{2B00}-\u{2BFF}]/u.test(line);
+}
+
+/* Parser markdown-lite cho cot "Danh gia": dong **in dam** -> tieu de phu,
+   dong bat dau bang emoji -> gom thanh danh sach, con lai -> doan van.
+   Tat ca noi dung deu duoc escape HTML truoc khi chen vao trang. */
+function renderReviewMarkdown(raw){
+  if(!raw) return '';
+  const lines=raw.split(/\r?\n/).map(function(l){return l.trim()}).filter(function(l){return l.length>0});
+  let html='', inList=false;
+  lines.forEach(function(line){
+    const bold=line.match(/^\*\*(.+?)\*\*$/);
+    if(bold){
+      if(inList){html+='</ul>';inList=false;}
+      html+='<h4 class="review-heading">'+escapeHTML(bold[1])+'</h4>';
+    }else if(isEmojiLine(line)){
+      if(!inList){html+='<ul class="review-list">';inList=true;}
+      html+='<li>'+escapeHTML(line)+'</li>';
+    }else{
+      if(inList){html+='</ul>';inList=false;}
+      html+='<p class="review-text">'+escapeHTML(line)+'</p>';
+    }
+  });
+  if(inList)html+='</ul>';
+  return html;
+}
+
 function slugify(s){
   return (s||"").toString().trim().toLowerCase()
     .replace(/[^a-z0-9]+/g,'-')
@@ -238,8 +278,8 @@ function renderPageContent(raw){
   return raw.split(/\n+/).map(function(line){
     line=line.trim();
     if(!line) return '';
-    if(line.indexOf('## ')===0) return '<h2>'+line.slice(3)+'</h2>';
-    return '<p>'+line+'</p>';
+    if(line.indexOf('## ')===0) return '<h2>'+escapeHTML(line.slice(3))+'</h2>';
+    return '<p>'+escapeHTML(line)+'</p>';
   }).join('');
 }
 
@@ -273,7 +313,7 @@ function renderMarquee(brands, marqueeEl, trackEl){
   if(!brands.length){marqueeEl.style.display='none';return;}
   marqueeEl.style.display='';
   const one=brands.map(function(b){
-    return '<div class="marquee-item"><img src="'+b.img+'" alt="'+b.name+'" loading="lazy" onerror="this.parentNode.style.display=\'none\'"></div>';
+    return '<div class="marquee-item"><img src="'+escapeHTML(b.img)+'" alt="'+escapeHTML(b.name)+'" loading="lazy" onerror="this.parentNode.style.display=\'none\'"></div>';
   }).join('');
   trackEl.innerHTML=one+one;
 }
@@ -282,33 +322,34 @@ function renderMarquee(brands, marqueeEl, trackEl){
    san pham rieng (/product/xxx) de chay Ads, khong hien ma truc tiep nua. */
 function productCardHTML(p, t){
   const logo=p.logo
-    ? '<img class="brand-logo" src="'+p.logo+'" alt="'+p.brand+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'brand-fallback\\\'>'+p.brand.charAt(0)+'</div>\'">'
-    : '<div class="brand-fallback">'+p.brand.charAt(0)+'</div>';
-  const tag='<span class="tag">'+categoryLabel(p.category)+'</span>';
+    ? '<img class="brand-logo" src="'+escapeHTML(p.logo)+'" alt="'+escapeHTML(p.brand)+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'brand-fallback\\\'>'+escapeHTML(p.brand.charAt(0))+'</div>\'">'
+    : '<div class="brand-fallback">'+escapeHTML(p.brand.charAt(0))+'</div>';
+  const tag='<span class="tag">'+escapeHTML(categoryLabel(p.category))+'</span>';
   const bestDiscount=(p.offers.map(function(o){return o.discount}).filter(Boolean)[0])||'';
-  const disc=bestDiscount?'<span class="discount">'+bestDiscount+'</span>':'';
+  const disc=bestDiscount?'<span class="discount">'+escapeHTML(bestDiscount)+'</span>':'';
   const btnLabel=p.offers.length>1 ? tpl(t.viewCodesTpl,{n:p.offers.length}) : t.viewDeal;
-  return '<a class="card" href="/product/'+p.slug+'"><div class="card-top">'+logo+'<div style="min-width:0">'+tag+'<div class="brand-name">'+p.brand+'</div></div>'+disc+'</div><h3>'+p.title+'</h3><p class="desc">'+p.desc+'</p><div class="deal-btn">'+btnLabel+'</div></a>';
+  return '<a class="card" href="/product/'+encodeURIComponent(p.slug)+'"><div class="card-top">'+logo+'<div style="min-width:0">'+tag+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
 }
 
 /* Dong hien thi 1 ma / 1 uu dai ben trong trang san pham. */
 function offerRowHTML(offer, t, ctx){
   ctx=ctx||{};
+  const brandInitial=escapeHTML((ctx.brand||'?').charAt(0));
   const logo=ctx.logo
-    ? '<img src="'+ctx.logo+'" alt="'+(ctx.brand||'')+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'offer-logo-fallback\\\'>'+((ctx.brand||'?').charAt(0))+'</div>\'">'
-    : '<div class="offer-logo-fallback">'+((ctx.brand||'?').charAt(0))+'</div>';
-  const disc=offer.discount?'<span class="discount">'+offer.discount+'</span>':'';
-  const badges='<div class="offer-badges">'+disc+'<span class="badge-verified">&#10003; '+t.verifiedBadge+'</span></div>';
-  const left='<div class="offer-card-left">'+logo+'<span class="offer-tag">'+(offer.code?t.codeTag:t.dealTag)+'</span></div>';
+    ? '<img src="'+escapeHTML(ctx.logo)+'" alt="'+escapeHTML(ctx.brand||'')+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'offer-logo-fallback\\\'>'+brandInitial+'</div>\'">'
+    : '<div class="offer-logo-fallback">'+brandInitial+'</div>';
+  const disc=offer.discount?'<span class="discount">'+escapeHTML(offer.discount)+'</span>':'';
+  const badges='<div class="offer-badges">'+disc+'<span class="badge-verified">&#10003; '+escapeHTML(t.verifiedBadge)+'</span></div>';
+  const left='<div class="offer-card-left">'+logo+'<span class="offer-tag">'+escapeHTML(offer.code?t.codeTag:t.dealTag)+'</span></div>';
   if(offer.code){
     return '<div class="offer-card">'+left
-      +'<div class="offer-card-mid">'+badges+'<div class="code-preview">'+offer.code+'</div></div>'
-      +'<button type="button" class="offer-cta code-btn" data-code="'+offer.code+'" data-url="'+offer.url+'">'+t.reveal+'</button>'
+      +'<div class="offer-card-mid">'+badges+'<div class="code-preview">'+escapeHTML(offer.code)+'</div></div>'
+      +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'" data-url="'+escapeHTML(offer.url)+'">'+escapeHTML(t.reveal)+'</button>'
       +'</div>';
   }
   return '<div class="offer-card">'+left
     +'<div class="offer-card-mid">'+badges+'</div>'
-    +'<a class="offer-cta deal-btn" href="'+offer.url+'" target="_blank" rel="nofollow noopener sponsored">'+t.deal+'</a>'
+    +'<a class="offer-cta deal-btn" href="'+escapeHTML(offer.url)+'" target="_blank" rel="nofollow noopener sponsored">'+escapeHTML(t.deal)+'</a>'
     +'</div>';
 }
 
@@ -324,13 +365,13 @@ function starsHTML(rating){
    danh sach ma tren trang san pham. Chi hien khi Sheet co du lieu. */
 function reviewCardHTML(p){
   if(!p.rating && !p.review && !p.image) return '';
-  const logoBox=p.logo?'<div class="review-logo-box"><img src="'+p.logo+'" alt="'+p.brand+'"></div>':'';
+  const logoBox=p.logo?'<div class="review-logo-box"><img src="'+escapeHTML(p.logo)+'" alt="'+escapeHTML(p.brand)+'"></div>':'';
   const stars=starsHTML(p.rating);
   const ratingRow=stars?'<div class="rating-row">'+stars+'<span class="rating-num">'+parseFloat(p.rating).toFixed(1)+'/5</span></div>':'';
   const divider=(p.rating||p.review)?'<hr class="review-divider">':'';
-  const img=p.image?'<img class="review-img" src="'+p.image+'" alt="'+p.title+'" loading="lazy">':'';
-  const review=p.review?'<p class="review-text">'+p.review+'</p>':'';
-  return '<aside class="review-card">'+logoBox+'<div class="review-brand">'+p.brand+'</div>'+ratingRow+divider+img+review+'</aside>';
+  const img=p.image?'<img class="review-img" src="'+escapeHTML(p.image)+'" alt="'+escapeHTML(p.title)+'" loading="lazy">':'';
+  const review=renderReviewMarkdown(p.review);
+  return '<aside class="review-card">'+logoBox+'<div class="review-brand">'+escapeHTML(p.brand)+'</div>'+ratingRow+divider+img+review+'</aside>';
 }
 
 /* Mo link affiliate o tab moi (giong het nut "Get Deal"). Trinh duyet khong

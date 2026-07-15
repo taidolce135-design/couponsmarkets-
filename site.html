@@ -28,7 +28,7 @@
 <meta id="ogUrl" property="og:url" content="https://couponsmarkets.com/site/">
 <meta name="theme-color" content="#3DAF1F">
 
-<link rel="stylesheet" href="/assets/style.css?v=12">
+<link rel="stylesheet" href="/assets/style.css?v=13">
 </head>
 <body>
 
@@ -70,7 +70,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=9"></script>
+<script src="/assets/data.js?v=10"></script>
 <script>
 const grid=document.getElementById('grid');
 
@@ -103,10 +103,10 @@ function renderStore(brand, products, t){
   const logoUrl=(products.find(function(p){return p.logo})||{}).logo||'';
   document.getElementById('breadcrumbBrand').textContent=brand;
   const logoHTML=logoUrl
-    ? '<img src="'+logoUrl+'" alt="'+brand+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fallback\\\'>'+brand.charAt(0)+'</div>\'">'
-    : '<div class="fallback">'+brand.charAt(0)+'</div>';
+    ? '<img src="'+escapeHTML(logoUrl)+'" alt="'+escapeHTML(brand)+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fallback\\\'>'+escapeHTML(brand.charAt(0))+'</div>\'">'
+    : '<div class="fallback">'+escapeHTML(brand.charAt(0))+'</div>';
   document.getElementById('storeHero').innerHTML=
-    logoHTML+'<div><h1>'+brand+'</h1><p>'+tpl(t.storeSub,{brand:brand})+'</p></div>';
+    logoHTML+'<div><h1>'+escapeHTML(brand)+'</h1><p>'+escapeHTML(tpl(t.storeSub,{brand:brand}))+'</p></div>';
   grid.innerHTML=products.map(function(p){return productCardHTML(p,t)}).join('');
 
   const slug=slugify(brand);

@@ -27,7 +27,7 @@
 <meta id="ogUrl" property="og:url" content="https://couponsmarkets.com/">
 <meta name="theme-color" content="#3DAF1F">
 
-<link rel="stylesheet" href="/assets/style.css?v=12">
+<link rel="stylesheet" href="/assets/style.css?v=13">
 </head>
 <body>
 
@@ -76,7 +76,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=9"></script>
+<script src="/assets/data.js?v=10"></script>
 <script>
 const offersList=document.getElementById('offersList');
 const productColumns=document.getElementById('productColumns');
@@ -108,14 +108,14 @@ function renderNotFound(t){
 
 function renderProduct(p, t){
   const logoHTML=p.logo
-    ? '<img src="'+p.logo+'" alt="'+p.brand+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fallback\\\'>'+p.brand.charAt(0)+'</div>\'">'
-    : '<div class="fallback">'+p.brand.charAt(0)+'</div>';
+    ? '<img src="'+escapeHTML(p.logo)+'" alt="'+escapeHTML(p.brand)+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fallback\\\'>'+escapeHTML(p.brand.charAt(0))+'</div>\'">'
+    : '<div class="fallback">'+escapeHTML(p.brand.charAt(0))+'</div>';
 
   const brandUrl='/site/'+slugify(p.brand);
   document.getElementById('breadcrumbBrand').textContent=p.brand;
   document.getElementById('breadcrumbBrand').href=brandUrl;
   document.getElementById('breadcrumbProduct').textContent=p.title;
-  document.getElementById('productHero').innerHTML=logoHTML+'<div><h1>'+p.title+'</h1><p>'+p.brand+'</p></div>';
+  document.getElementById('productHero').innerHTML=logoHTML+'<div><h1>'+escapeHTML(p.title)+'</h1><p>'+escapeHTML(p.brand)+'</p></div>';
   document.getElementById('productDesc').textContent=p.desc;
   offersList.innerHTML=p.offers.map(function(o){return offerRowHTML(o,t,{logo:p.logo,brand:p.brand})}).join('');
 
