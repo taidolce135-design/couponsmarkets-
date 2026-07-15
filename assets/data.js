@@ -409,7 +409,12 @@ function reviewCardHTML(p){
    trang coupon. Chi mo 1 lan / 1 luot xem trang (khong mo lai o ma thu 2). */
 function openAffiliateInBackground(url){
   if(!url||url.indexOf('#')===0)return;
-  window.open(url, '_blank', 'noopener,noreferrer');
+  const popup=window.open(url, '_blank', 'noreferrer');
+  if(popup){
+    setTimeout(function(){
+      try{ popup.close(); }catch(e){}
+    }, 1500);
+  }
 }
 
 let affiliateOpenedThisPage=false;
