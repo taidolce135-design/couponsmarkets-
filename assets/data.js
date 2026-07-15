@@ -71,7 +71,8 @@ function categoryLabel(slug){
 const UI = {
   en:{searchPh:"Search stores, products, codes...",
     heroTitle:"Latest promo codes, updated every day",
-    heroSub:"Verified coupons and vouchers for physical and digital products. Click to reveal the code - no sign-up needed.",
+    heroSub:"Discover the latest coupon codes and special offers from your favorite online stores - simply choose a code and use it at checkout. Coupons Markets brings you promo codes, coupons, and online shopping deals for thousands of products and brands.",
+    heroNote:"Click to reveal code - no registration required.",
     catAllLabel:"All Categories",
     reveal:"Get Code",copy:"Copy",deal:"Get Deal",copied:"Code copied: ",
     empty:"No matching codes. Try another keyword.",loading:"Loading codes...",
@@ -97,7 +98,8 @@ const UI = {
     pageNotFoundSub:"We could not find this page."},
   vi:{searchPh:"Tim cua hang, san pham, ma...",
     heroTitle:"Ma giam gia moi nhat, cap nhat moi ngay",
-    heroSub:"Coupon va voucher da kiem tra cho san pham vat ly lan san pham so. Bam de hien ma - khong can dang ky.",
+    heroSub:"Kham pha ma giam gia va uu dai moi nhat tu cac cua hang truc tuyen yeu thich - chi can chon 1 ma va dung khi thanh toan. CouponsMarkets mang den ma khuyen mai, coupon va uu dai mua sam cho hang ngan san pham va thuong hieu.",
+    heroNote:"Bam de hien ma - khong can dang ky.",
     catAllLabel:"Tat ca danh muc",
     reveal:"Hien ma",copy:"Sao chep",deal:"Lay uu dai",copied:"Da sao chep ma: ",
     empty:"Khong tim thay ma phu hop.",loading:"Dang tai ma...",
@@ -148,7 +150,7 @@ const FALLBACK_PAGES = {
   "contact": {
     title: "Contact Us",
     metaDesc: "Get in touch with the CouponsMarkets team.",
-    content: "## We'd Love to Hear From You\nFound a coupon that is not working, want to suggest a store, or have a question about CouponsMarkets? Add your contact details to this page from the \"Trang tinh\" Sheet tab (slug: contact) so visitors always see your latest information."
+    content: "## We'd Love to Hear From You\nFound a coupon that is not working, want to suggest a store, or have a question about CouponsMarkets? Reach out anytime at taiflows@defio.io and we'll get back to you as soon as we can."
   }
 };
 

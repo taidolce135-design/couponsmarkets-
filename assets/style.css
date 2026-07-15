@@ -1,7 +1,7 @@
 :root{
   --bg:#f8fafc; --card:#ffffff; --ink:#0f172a; --muted:#64748b;
   --line:#e2e8f0; --brand:#3DAF1F; --brand-dark:#2F8718; --accent:#f59e0b;
-  --code-bg:#fffbeb; --code-border:#fcd34d; --radius:14px;
+  --code-bg:#f0fdf4; --code-border:#86efac; --radius:14px;
   --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.05);
   --footer-bg:#0f172a; --footer-text:#94a3b8; --footer-heading:#f1f5f9;
 }
@@ -26,7 +26,8 @@ header{background:var(--card);border-bottom:1px solid var(--line);position:stick
 
 .hero{padding:38px 0 22px}
 .hero h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;margin-bottom:8px}
-.hero p{color:var(--muted);font-size:16px;max-width:640px}
+.hero p{color:var(--muted);font-size:16px;max-width:640px;text-transform:none}
+.hero-note{margin-top:8px;font-size:13px}
 @media(max-width:600px){.hero h1{font-size:24px}}
 
 .hero-banner{display:block;width:100%;max-height:280px;object-fit:cover;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:28px}

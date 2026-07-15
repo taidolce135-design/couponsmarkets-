@@ -24,7 +24,7 @@
 {"@context":"https://schema.org","@type":"WebSite","name":"CouponsMarkets","url":"https://couponsmarkets.com/"}
 </script>
 
-<link rel="stylesheet" href="/assets/style.css?v=10">
+<link rel="stylesheet" href="/assets/style.css?v=11">
 </head>
 <body>
 
@@ -39,8 +39,8 @@
 
 <main>
   <div class="wrap">
-    <section class="hero"><h1 id="heroTitle"></h1><p id="heroSub"></p></section>
-    <img class="hero-banner" src="https://prodima.vn/wp-content/uploads/2022/02/14-kinh-nghiem-ban-hang-online-ma-moi-doanh-nghiep-se-can.jpg" alt="CouponsMarkets" loading="lazy">
+    <section class="hero"><h1 id="heroTitle"></h1><p id="heroSub"></p><p id="heroNote" class="hero-note"></p></section>
+    <img class="hero-banner" src="https://images.stockcake.com/public/7/8/0/780e1c85-65a3-4178-b3f7-4f416804d38b_large/joyful-shopping-friends-stockcake.jpg" alt="CouponsMarkets" loading="lazy">
   </div>
 
   <div class="marquee" id="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeTrack"></div></div>
@@ -76,7 +76,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=7"></script>
+<script src="/assets/data.js?v=8"></script>
 <script>
 const grid=document.getElementById('grid');
 const catList=document.getElementById('catList');
@@ -95,6 +95,7 @@ function applyUI(){
   document.getElementById('searchInput').placeholder=t.searchPh;
   document.getElementById('heroTitle').textContent=t.heroTitle;
   document.getElementById('heroSub').textContent=t.heroSub;
+  document.getElementById('heroNote').textContent=t.heroNote;
   document.getElementById('catAllLabel').textContent=t.catAllLabel;
   renderCatList(t);
   applyFooterUI(t);
