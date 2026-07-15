@@ -126,6 +126,9 @@ footer .logo-img{background:#fff;border-radius:10px;padding:6px 10px}
 .offer-cta:hover{background:var(--brand-dark)}
 .offer-cta.revealed{background:var(--brand-dark)}
 .offer-cta::after{content:"";position:absolute;bottom:0;right:0;border-style:solid;border-width:0 0 16px 16px;border-color:transparent transparent rgba(0,0,0,.2) transparent}
+.offer-cta-group{display:flex;flex-direction:column;align-items:stretch;gap:8px;flex-shrink:0}
+.offer-visit-link{text-align:center;font-size:12px;font-weight:600;color:var(--brand-dark);text-decoration:underline}
+.offer-visit-link:hover{color:var(--brand)}
 @media(max-width:480px){.offer-card{justify-content:center;text-align:center}.offer-card-mid{min-width:100%}}
 .product-desc{max-width:640px;color:var(--muted);font-size:15px;margin-bottom:28px}
 

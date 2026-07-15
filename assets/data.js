@@ -85,7 +85,7 @@ const UI = {
     heroNote:"Click to reveal code - no registration required.",
     catAllLabel:"All Categories",
     reveal:"Get Code",copy:"Copy",deal:"Get Deal",copied:"Code copied: ",
-    verifiedBadge:"Verified",codeTag:"CODE",dealTag:"DEAL",
+    verifiedBadge:"Verified",codeTag:"CODE",dealTag:"DEAL",visitStore:"Visit Store",
     empty:"No matching codes. Try another keyword.",loading:"Loading codes...",
     err:"Could not load codes. Please refresh the page.",
     footTag:"Trusted coupons, updated daily.",footInfo:"Information",footAbout:"About us",
@@ -119,7 +119,7 @@ const UI = {
     heroNote:"Bam de hien ma - khong can dang ky.",
     catAllLabel:"Tat ca danh muc",
     reveal:"Hien ma",copy:"Sao chep",deal:"Lay uu dai",copied:"Da sao chep ma: ",
-    verifiedBadge:"Da xac thuc",codeTag:"MA",dealTag:"UU DAI",
+    verifiedBadge:"Da xac thuc",codeTag:"MA",dealTag:"UU DAI",visitStore:"Toi cua hang",
     empty:"Khong tim thay ma phu hop.",loading:"Dang tai ma...",
     err:"Khong tai duoc du lieu. Anh kiem tra lai link Sheet nhe.",
     footTag:"Tong hop ma giam gia uy tin, cap nhat hang ngay.",footInfo:"Thong tin",footAbout:"Ve chung toi",
@@ -372,7 +372,10 @@ function offerRowHTML(offer, t, ctx){
   if(offer.code){
     return '<div class="offer-card">'+left
       +'<div class="offer-card-mid">'+badges+'<div class="code-preview">'+escapeHTML(offer.code)+'</div></div>'
-      +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'" data-url="'+escapeHTML(offer.url)+'">'+escapeHTML(t.reveal)+'</button>'
+      +'<div class="offer-cta-group">'
+        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'">'+escapeHTML(t.reveal)+'</button>'
+        +'<a class="offer-visit-link" href="'+escapeHTML(offer.url)+'" target="_blank" rel="nofollow noopener sponsored">'+escapeHTML(t.visitStore)+'</a>'
+      +'</div>'
       +'</div>';
   }
   return '<div class="offer-card">'+left
@@ -402,19 +405,16 @@ function reviewCardHTML(p){
   return '<aside class="review-card">'+logoBox+'<div class="review-brand">'+escapeHTML(p.brand)+'</div>'+ratingRow+divider+img+review+'</aside>';
 }
 
-/* Mo link affiliate o tab moi (giong het nut "Get Deal"). Trinh duyet khong
-   cho phep JS ep mo tab nen thuc su (chi hoat dong khi khach tu giu Ctrl/Cmd
-   that su bam) nen dung cach mo tab chuan, on dinh tren moi trinh duyet. */
-function openAffiliateInBackground(url){
-  if(!url||url.indexOf('#')===0)return;
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
-
-let affiliateOpenedThisPage=false;
+/* QUAN TRONG: KHONG dung window.open()/redirect bang JS khi khach bam nut nua.
+   Google Ads da danh dau trang la "Trang web bi xam pham" vi hanh vi tu dong
+   mo tab/chuyen huong bang script giong dau hieu ma doc/hijack. Gio moi lien
+   ket sang trang affiliate la the <a href target=_blank> that, khach tu bam,
+   khong co script nao can thiep - giong het cach nut "Get Deal" da lam dung
+   tu truoc. */
 function attachCodeEvents(gridEl){
   gridEl.addEventListener('click',function(e){
     const btn=e.target.closest('.code-btn');if(!btn)return;
-    const code=btn.dataset.code,url=btn.dataset.url,t=UI[lang];
+    const code=btn.dataset.code,t=UI[lang];
     const card=btn.closest('.offer-card');
     const preview=card?card.querySelector('.code-preview'):null;
     if(!btn.classList.contains('revealed')){
@@ -422,10 +422,6 @@ function attachCodeEvents(gridEl){
       if(preview)preview.classList.add('revealed');
       btn.textContent=t.copy;
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
-      if(!affiliateOpenedThisPage){
-        affiliateOpenedThisPage=true;
-        openAffiliateInBackground(url);
-      }
     }else{
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
     }
