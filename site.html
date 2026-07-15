@@ -28,7 +28,7 @@
 <meta id="ogUrl" property="og:url" content="https://couponsmarkets.com/site/">
 <meta name="theme-color" content="#3DAF1F">
 
-<link rel="stylesheet" href="/assets/style.css?v=13">
+<link rel="stylesheet" href="/assets/style.css?v=14">
 </head>
 <body>
 
@@ -70,7 +70,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=10"></script>
+<script src="/assets/data.js?v=11"></script>
 <script>
 const grid=document.getElementById('grid');
 
@@ -129,7 +129,7 @@ function renderStore(brand, products, t){
       "itemListElement": products.map(function(p,i){
         return {"@type":"ListItem","position":i+1,"item":{
           "@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/product/'+p.slug,
-          "category":p.category,"seller":{"@type":"Organization","name":brand}
+          "category":p.categories.join(", "),"seller":{"@type":"Organization","name":brand}
         }};
       })
     }

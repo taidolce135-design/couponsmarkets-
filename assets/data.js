@@ -60,6 +60,16 @@ function resolveCategory(raw){
   return found ? found.slug : "other";
 }
 
+/* Mot cua hang co the thuoc nhieu danh muc, ngan cach boi dau phay
+   trong Sheet (vd "Tech & Electronics, Business"). Tra ve mang slug
+   duy nhat, khong trung. Neu de trong -> ["other"]. */
+function resolveCategories(raw){
+  const tokens=(raw||"").split(',').map(function(s){return s.trim()}).filter(Boolean);
+  if(!tokens.length) return ["other"];
+  const slugs=tokens.map(resolveCategory);
+  return slugs.filter(function(s,i){return slugs.indexOf(s)===i});
+}
+
 function categoryLabel(slug){
   const c = CATEGORIES.find(function(c){return c.slug===slug}) || CATEGORIES[CATEGORIES.length-1];
   return lang==='vi' ? c.vi : c.en;
@@ -96,7 +106,13 @@ const UI = {
     dealNotFoundTitle:"Deal not found",
     dealNotFoundSub:"We could not find this deal. Browse all current coupons instead.",
     pageNotFoundTitle:"Page not found",
-    pageNotFoundSub:"We could not find this page."},
+    pageNotFoundSub:"We could not find this page.",
+    categoryHeroTitleTpl:"{category} Coupons & Promo Codes",
+    categoryTitleTpl:"{category} Coupons & Promo Codes 2026 | Verified Deals",
+    categoryMetaDescTpl:"Browse verified {category} coupons and promo codes, updated regularly. Click to reveal and save.",
+    categoryHeroSubTpl:"Verified {category} coupons and deals, updated regularly. Click to reveal the code.",
+    categoryNotFoundTitle:"Category not found",
+    categoryNotFoundSub:"We could not find this category. Browse all current coupons instead."},
   vi:{searchPh:"Tim cua hang, san pham, ma...",
     heroTitle:"Ma giam gia moi nhat, cap nhat moi ngay",
     heroSub:"Kham pha ma giam gia va uu dai moi nhat tu cac cua hang truc tuyen yeu thich - chi can chon 1 ma va dung khi thanh toan. CouponsMarkets mang den ma khuyen mai, coupon va uu dai mua sam cho hang ngan san pham va thuong hieu.",
@@ -124,7 +140,13 @@ const UI = {
     dealNotFoundTitle:"Khong tim thay uu dai",
     dealNotFoundSub:"Khong tim thay uu dai nay. Xem tat ca ma giam gia hien co.",
     pageNotFoundTitle:"Khong tim thay trang",
-    pageNotFoundSub:"Khong tim thay trang nay."}
+    pageNotFoundSub:"Khong tim thay trang nay.",
+    categoryHeroTitleTpl:"Ma giam gia {category}",
+    categoryTitleTpl:"Ma giam gia {category} 2026 | Uu dai da kiem tra",
+    categoryMetaDescTpl:"Xem cac ma giam gia {category} da kiem tra, cap nhat thuong xuyen. Bam de xem va luu.",
+    categoryHeroSubTpl:"Ma giam gia va uu dai da kiem tra cho danh muc {category}, cap nhat thuong xuyen. Bam de hien ma.",
+    categoryNotFoundTitle:"Khong tim thay danh muc",
+    categoryNotFoundSub:"Khong tim thay danh muc nay. Xem tat ca ma giam gia hien co."}
 };
 
 /* ================================================================
@@ -224,8 +246,8 @@ function fetchData(){
   if(!SHEET_COUPONS_URL){
     return Promise.resolve({
       coupons:[
-        {brand:"Sirui",logo:"",productSlug:"",title:"Enjoy Fast Savings 5% Off",desc:"Get Sirui promo code at checkout and enjoy 5% off.",code:"UPA-TAINGUYENNHU",url:"#",discount:"5%",category:"tech-electronics",image:"",rating:"",review:""},
-        {brand:"Soulflower",logo:"",productSlug:"",title:"Top Coupon Codes Today",desc:"Save 5% off on all products with Soulflower coupon.",code:"SHMEDIA",url:"#",discount:"5%",category:"health-beauty",image:"",rating:"",review:""}
+        {brand:"Sirui",logo:"",productSlug:"",title:"Enjoy Fast Savings 5% Off",desc:"Get Sirui promo code at checkout and enjoy 5% off.",code:"UPA-TAINGUYENNHU",url:"#",discount:"5%",categoryRaw:"Tech & Electronics",image:"",rating:"",review:""},
+        {brand:"Soulflower",logo:"",productSlug:"",title:"Top Coupon Codes Today",desc:"Save 5% off on all products with Soulflower coupon.",code:"SHMEDIA",url:"#",discount:"5%",categoryRaw:"Health & Beauty",image:"",rating:"",review:""}
       ],
       brands:[]
     });
@@ -245,7 +267,7 @@ function fetchData(){
         code:(r[COL.code]||"").trim(),
         url:(r[COL.url]||"#").trim(),
         discount:(r[COL.discount]||"").trim(),
-        category:resolveCategory(r[COL.category]),
+        categoryRaw:(r[COL.category]||"").trim(),
         image:(r[COL.image]||"").trim(),
         rating:(r[COL.rating]||"").toString().trim().replace(',', '.'),
         review:(r[COL.review]||"").trim()
@@ -296,17 +318,23 @@ function groupToProducts(coupons){
   coupons.forEach(function(c){
     const key=productKey(c.brand, c.productSlug, c.title);
     if(!map[key]){
-      map[key]={slug:key, brand:c.brand, logo:c.logo, title:c.title, desc:c.desc, category:c.category,
+      map[key]={slug:key, brand:c.brand, logo:c.logo, title:c.title, desc:c.desc, categoryRaw:c.categoryRaw,
         image:"", rating:"", review:"", offers:[]};
       order.push(key);
     }
     if(!map[key].logo && c.logo) map[key].logo=c.logo;
+    if(!map[key].categoryRaw && c.categoryRaw) map[key].categoryRaw=c.categoryRaw;
     if(!map[key].image && c.image) map[key].image=c.image;
     if(!map[key].rating && c.rating) map[key].rating=c.rating;
     if(!map[key].review && c.review) map[key].review=c.review;
     if(c.code || (c.url && c.url!=='#')) map[key].offers.push({code:c.code, discount:c.discount, url:c.url});
   });
-  return order.map(function(k){return map[k];}).filter(function(p){return p.offers.length;});
+  return order.map(function(k){
+    const p=map[k];
+    p.categories=resolveCategories(p.categoryRaw);
+    delete p.categoryRaw;
+    return p;
+  }).filter(function(p){return p.offers.length;});
 }
 
 function renderMarquee(brands, marqueeEl, trackEl){
@@ -324,11 +352,11 @@ function productCardHTML(p, t){
   const logo=p.logo
     ? '<img class="brand-logo" src="'+escapeHTML(p.logo)+'" alt="'+escapeHTML(p.brand)+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'brand-fallback\\\'>'+escapeHTML(p.brand.charAt(0))+'</div>\'">'
     : '<div class="brand-fallback">'+escapeHTML(p.brand.charAt(0))+'</div>';
-  const tag='<span class="tag">'+escapeHTML(categoryLabel(p.category))+'</span>';
+  const tags='<div class="tag-row">'+p.categories.map(function(slug){return '<span class="tag">'+escapeHTML(categoryLabel(slug))+'</span>'}).join('')+'</div>';
   const bestDiscount=(p.offers.map(function(o){return o.discount}).filter(Boolean)[0])||'';
   const disc=bestDiscount?'<span class="discount">'+escapeHTML(bestDiscount)+'</span>':'';
   const btnLabel=p.offers.length>1 ? tpl(t.viewCodesTpl,{n:p.offers.length}) : t.viewDeal;
-  return '<a class="card" href="/product/'+encodeURIComponent(p.slug)+'"><div class="card-top">'+logo+'<div style="min-width:0">'+tag+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
+  return '<a class="card" href="/product/'+encodeURIComponent(p.slug)+'"><div class="card-top">'+logo+'<div style="min-width:0">'+tags+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
 }
 
 /* Dong hien thi 1 ma / 1 uu dai ben trong trang san pham. */
@@ -427,7 +455,7 @@ function buildCouponJsonLd(products){
           "name": p.title,
           "description": p.desc,
           "url": origin + '/product/' + p.slug,
-          "category": p.category,
+          "category": p.categories.join(', '),
           "seller":{"@type":"Organization","name":p.brand}
         }
       };

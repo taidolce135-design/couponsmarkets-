@@ -9,4 +9,8 @@ RewriteRule ^product/[a-zA-Z0-9-]+/?$ /product.html [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^category/[a-zA-Z0-9-]+/?$ /category.html [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(about|privacy-policy|terms-of-use|contact)/?$ /page.html [L]

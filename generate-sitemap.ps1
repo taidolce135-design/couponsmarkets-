@@ -33,11 +33,22 @@ foreach ($r in $rows) {
 
 $today = Get-Date -Format "yyyy-MM-dd"
 
+# 12 danh muc co dinh (phai khop voi mang CATEGORIES trong assets/data.js)
+$categorySlugs = @(
+    "arts-entertainment","business","clothing-accessories","food-gifts",
+    "health-beauty","home-garden","life-family","sports-fitness",
+    "tech-electronics","travel","ai-saas","other"
+)
+
 $urls = @()
 $urls += "  <url>`n    <loc>$BaseUrl/</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>daily</changefreq>`n    <priority>1.0</priority>`n  </url>"
 
 foreach ($slug in @("about","privacy-policy","terms-of-use","contact")) {
     $urls += "  <url>`n    <loc>$BaseUrl/$slug</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>monthly</changefreq>`n    <priority>0.3</priority>`n  </url>"
+}
+
+foreach ($slug in $categorySlugs) {
+    $urls += "  <url>`n    <loc>$BaseUrl/category/$slug</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>weekly</changefreq>`n    <priority>0.5</priority>`n  </url>"
 }
 
 foreach ($b in $brands) {
@@ -61,4 +72,4 @@ $($urls -join "`n")
 
 $outPath = Join-Path $PSScriptRoot "sitemap.xml"
 $xml | Set-Content -Path $outPath -Encoding utf8
-Write-Host "Da ghi $outPath voi $($urls.Count) URL (1 trang chu, 4 trang tinh, $($brands.Count) cua hang, $($productKeys.Count) san pham)."
+Write-Host "Da ghi $outPath voi $($urls.Count) URL (1 trang chu, 4 trang tinh, 12 danh muc, $($brands.Count) cua hang, $($productKeys.Count) san pham)."

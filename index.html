@@ -33,7 +33,7 @@
 {"@context":"https://schema.org","@type":"WebSite","name":"CouponsMarkets","url":"https://couponsmarkets.com/"}
 </script>
 
-<link rel="stylesheet" href="/assets/style.css?v=13">
+<link rel="stylesheet" href="/assets/style.css?v=14">
 </head>
 <body>
 
@@ -85,16 +85,16 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=10"></script>
+<script src="/assets/data.js?v=11"></script>
 <script>
 const grid=document.getElementById('grid');
 const catList=document.getElementById('catList');
 let activeCat='all', query='', PRODUCTS=[], BRANDS=[];
 
 function renderCatList(t){
-  const items=[{slug:'all',label:t.catAllLabel}].concat(CATEGORIES.map(function(c){return {slug:c.slug,label:lang==='vi'?c.vi:c.en}}));
+  const items=[{slug:'all',label:t.catAllLabel,href:'/'}].concat(CATEGORIES.map(function(c){return {slug:c.slug,label:lang==='vi'?c.vi:c.en,href:'/category/'+c.slug}}));
   catList.innerHTML=items.map(function(c){
-    return '<button data-cat="'+c.slug+'" class="'+(c.slug===activeCat?'active':'')+'">'+c.label+'</button>';
+    return '<a href="'+c.href+'" data-cat="'+c.slug+'" class="'+(c.slug===activeCat?'active':'')+'">'+escapeHTML(c.label)+'</a>';
   }).join('');
 }
 
@@ -127,7 +127,7 @@ function loadData(){
 function render(){
   const t=UI[lang];
   const list=PRODUCTS.filter(function(p){
-    const okCat=activeCat==='all'||p.category===activeCat;
+    const okCat=activeCat==='all'||p.categories.indexOf(activeCat)!==-1;
     const q=query.toLowerCase();
     const okQ=!q||(p.brand+p.title).toLowerCase().includes(q);
     return okCat&&okQ;
@@ -137,9 +137,10 @@ function render(){
 }
 
 catList.addEventListener('click',function(e){
-  const btn=e.target.closest('button');if(!btn)return;
-  activeCat=btn.dataset.cat;
-  catList.querySelectorAll('button').forEach(function(b){b.classList.toggle('active',b.dataset.cat===activeCat)});
+  const link=e.target.closest('a');if(!link)return;
+  e.preventDefault();
+  activeCat=link.dataset.cat;
+  catList.querySelectorAll('a').forEach(function(a){a.classList.toggle('active',a.dataset.cat===activeCat)});
   render();
 });
 document.getElementById('searchInput').addEventListener('input',function(e){query=e.target.value;render()});
