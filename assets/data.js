@@ -75,6 +75,7 @@ const UI = {
     heroNote:"Click to reveal code - no registration required.",
     catAllLabel:"All Categories",
     reveal:"Get Code",copy:"Copy",deal:"Get Deal",copied:"Code copied: ",
+    verifiedBadge:"Verified",codeTag:"CODE",dealTag:"DEAL",
     empty:"No matching codes. Try another keyword.",loading:"Loading codes...",
     err:"Could not load codes. Please refresh the page.",
     footTag:"Trusted coupons, updated daily.",footInfo:"Information",footAbout:"About us",
@@ -102,6 +103,7 @@ const UI = {
     heroNote:"Bam de hien ma - khong can dang ky.",
     catAllLabel:"Tat ca danh muc",
     reveal:"Hien ma",copy:"Sao chep",deal:"Lay uu dai",copied:"Da sao chep ma: ",
+    verifiedBadge:"Da xac thuc",codeTag:"MA",dealTag:"UU DAI",
     empty:"Khong tim thay ma phu hop.",loading:"Dang tai ma...",
     err:"Khong tai duoc du lieu. Anh kiem tra lai link Sheet nhe.",
     footTag:"Tong hop ma giam gia uy tin, cap nhat hang ngay.",footInfo:"Thong tin",footAbout:"Ve chung toi",
@@ -290,12 +292,24 @@ function productCardHTML(p, t){
 }
 
 /* Dong hien thi 1 ma / 1 uu dai ben trong trang san pham. */
-function offerRowHTML(offer, t){
+function offerRowHTML(offer, t, ctx){
+  ctx=ctx||{};
+  const logo=ctx.logo
+    ? '<img src="'+ctx.logo+'" alt="'+(ctx.brand||'')+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'offer-logo-fallback\\\'>'+((ctx.brand||'?').charAt(0))+'</div>\'">'
+    : '<div class="offer-logo-fallback">'+((ctx.brand||'?').charAt(0))+'</div>';
   const disc=offer.discount?'<span class="discount">'+offer.discount+'</span>':'';
-  const action=offer.code
-    ? '<div class="code-btn" data-code="'+offer.code+'" data-url="'+offer.url+'"><div class="code-text">'+offer.code+'</div><div class="code-action">'+t.reveal+'</div></div>'
-    : '<a class="deal-btn" href="'+offer.url+'" target="_blank" rel="nofollow noopener sponsored">'+t.deal+'</a>';
-  return '<div class="offer-row">'+disc+'<div style="flex:1">'+action+'</div></div>';
+  const badges='<div class="offer-badges">'+disc+'<span class="badge-verified">&#10003; '+t.verifiedBadge+'</span></div>';
+  const left='<div class="offer-card-left">'+logo+'<span class="offer-tag">'+(offer.code?t.codeTag:t.dealTag)+'</span></div>';
+  if(offer.code){
+    return '<div class="offer-card">'+left
+      +'<div class="offer-card-mid">'+badges+'<div class="code-preview">'+offer.code+'</div></div>'
+      +'<button type="button" class="offer-cta code-btn" data-code="'+offer.code+'" data-url="'+offer.url+'">'+t.reveal+'</button>'
+      +'</div>';
+  }
+  return '<div class="offer-card">'+left
+    +'<div class="offer-card-mid">'+badges+'</div>'
+    +'<a class="offer-cta deal-btn" href="'+offer.url+'" target="_blank" rel="nofollow noopener sponsored">'+t.deal+'</a>'
+    +'</div>';
 }
 
 /* Ve thanh sao ty le theo so thap phan (vd 4.5/5), khong can anh. */
@@ -332,9 +346,12 @@ function attachCodeEvents(gridEl){
   gridEl.addEventListener('click',function(e){
     const btn=e.target.closest('.code-btn');if(!btn)return;
     const code=btn.dataset.code,url=btn.dataset.url,t=UI[lang];
+    const card=btn.closest('.offer-card');
+    const preview=card?card.querySelector('.code-preview'):null;
     if(!btn.classList.contains('revealed')){
       btn.classList.add('revealed');
-      btn.querySelector('.code-action').textContent=t.copy;
+      if(preview)preview.classList.add('revealed');
+      btn.textContent=t.copy;
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
       if(!affiliateOpenedThisPage){
         affiliateOpenedThisPage=true;
