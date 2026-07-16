@@ -18,3 +18,11 @@ RewriteRule ^category/[a-zA-Z0-9-]+/?$ /category.html [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(about|privacy-policy|terms-of-use|contact)/?$ /page.html [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^blog/?$ /blog.html [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^blog/[a-zA-Z0-9-]+/?$ /blogpost.html [L]

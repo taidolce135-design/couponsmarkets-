@@ -16,12 +16,12 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 
-<title id="metaTitle">CouponsMarkets</title>
-<meta id="metaDesc" name="description" content="">
+<title id="metaTitle">Blog | CouponsMarkets</title>
+<meta id="metaDesc" name="description" content="Shopping tips, deal roundups and stories from the CouponsMarkets team.">
 <meta name="robots" content="index, follow">
-<link id="metaCanonical" rel="canonical" href="https://couponsmarkets.com/">
-
+<link id="metaCanonical" rel="canonical" href="https://couponsmarkets.com/blog">
 <meta name="theme-color" content="#3DAF1F">
+
 <link rel="stylesheet" href="/assets/style.css?v=16">
 </head>
 <body>
@@ -37,8 +37,12 @@
 
 <main>
   <div class="wrap">
-    <p class="breadcrumb"><a href="/" id="breadcrumbHome"></a><span>/</span><span id="breadcrumbPage"></span></p>
-    <div class="page-content" id="pageContent"></div>
+    <p class="breadcrumb"><a href="/" id="breadcrumbHome"></a><span>/</span><span id="breadcrumbBlog"></span></p>
+    <section class="hero"><h1 id="blogHeroTitle"></h1><p id="blogHeroSub"></p></section>
+  </div>
+
+  <div class="wrap">
+    <div class="blog-grid" id="blogGrid"></div>
   </div>
 </main>
 
@@ -61,39 +65,29 @@
 
 <script src="/assets/data.js?v=16"></script>
 <script>
-function currentPageSlug(){
-  const path=location.pathname.replace(/^\/|\/$/g,'');
-  if(path) return path.toLowerCase();
-  const p=new URLSearchParams(location.search);
-  return (p.get('slug')||'').toLowerCase();
-}
+const blogGrid=document.getElementById('blogGrid');
 
 function applyStaticUI(t){
   document.documentElement.lang=lang;
   document.getElementById('searchInput').placeholder=t.searchPh;
   document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
+  document.getElementById('breadcrumbBlog').textContent=t.navBlog;
+  document.getElementById('blogHeroTitle').textContent=t.blogHeroTitle;
+  document.getElementById('blogHeroSub').textContent=t.blogHeroSub;
+  document.getElementById('metaTitle').textContent=t.blogPageTitle;
+  document.getElementById('metaDesc').setAttribute('content',t.blogPageMetaDesc);
   applyFooterUI(t);
 }
 
 const t=UI[lang];
 applyStaticUI(t);
-const slug=currentPageSlug();
-const pageContent=document.getElementById('pageContent');
-pageContent.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
+blogGrid.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
 
-fetchPage(slug).then(function(page){
-  if(!page){
-    document.getElementById('breadcrumbPage').textContent='';
-    pageContent.innerHTML='<h1>'+t.pageNotFoundTitle+'</h1><p>'+t.pageNotFoundSub+' <a href="/" style="color:var(--brand);font-weight:700">'+t.backHome+'</a></p>';
-    return;
-  }
-  document.getElementById('metaTitle').textContent=page.title+' | CouponsMarkets';
-  document.getElementById('metaDesc').setAttribute('content', page.metaDesc||'');
-  document.getElementById('metaCanonical').setAttribute('href', location.origin+'/'+slug);
-  document.getElementById('breadcrumbPage').textContent=page.title;
-  pageContent.innerHTML='<h1>'+escapeHTML(page.title)+'</h1>'+renderPageContent(page.content);
+fetchBlogPosts().then(function(posts){
+  if(!posts.length){blogGrid.innerHTML='<div class="state">'+t.blogEmpty+'</div>';return;}
+  blogGrid.innerHTML=posts.map(function(p){return blogCardHTML(p,t)}).join('');
 }).catch(function(e){
-  pageContent.innerHTML='<div class="state">'+t.err+'</div>';
+  blogGrid.innerHTML='<div class="state">'+t.err+'</div>';
   console.error(e);
 });
 </script>

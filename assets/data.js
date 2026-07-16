@@ -4,6 +4,7 @@
 const SHEET_COUPONS_URL = "https://opensheet.elk.sh/1jzl1UmcEQBO-LJuOtzLkAiZ1xm5UjjR5v2qOJL3OQ3A/M%C3%A3%20Coupon"; // <-- link tab "Mã Coupon"
 const SHEET_BRANDS_URL  = "https://opensheet.elk.sh/1jzl1UmcEQBO-LJuOtzLkAiZ1xm5UjjR5v2qOJL3OQ3A/%E1%BA%A2nh%20Web"; // <-- link tab "Ảnh Web"
 const SHEET_PAGES_URL   = "https://opensheet.elk.sh/1jzl1UmcEQBO-LJuOtzLkAiZ1xm5UjjR5v2qOJL3OQ3A/Trang%20t%C4%A9nh"; // <-- link tab "Trang tĩnh" (tuy chon, de trong van chay duoc)
+const SHEET_BLOG_URL    = "https://opensheet.elk.sh/1jzl1UmcEQBO-LJuOtzLkAiZ1xm5UjjR5v2qOJL3OQ3A/B%C3%A0i%20Blog"; // <-- link tab "Bài Blog" (tuy chon, de trong van chay duoc)
 
 /* ================================================================
    TEN COT TRONG SHEET (khop dung voi Sheet cua anh)
@@ -24,6 +25,7 @@ const COL = {
 };
 const BRAND_COL = { name:"Name", img:"img" };
 const PAGE_COL  = { slug:"Slug", title:"Tiêu đề", content:"Nội dung", metaDesc:"Mô tả meta" };
+const BLOG_COL  = { project:"Tên Dự Án", image:"Ảnh", content:"Nội Dung" };
 
 /* ================================================================
    DANH MUC SAN PHAM (co dinh, 12 muc). Cot "Category" trong Sheet
@@ -112,7 +114,16 @@ const UI = {
     categoryMetaDescTpl:"Browse verified {category} coupons and promo codes, updated regularly. Click to reveal and save.",
     categoryHeroSubTpl:"Verified {category} coupons and deals, updated regularly. Click to reveal the code.",
     categoryNotFoundTitle:"Category not found",
-    categoryNotFoundSub:"We could not find this category. Browse all current coupons instead."},
+    categoryNotFoundSub:"We could not find this category. Browse all current coupons instead.",
+    navBlog:"Blog",
+    blogPageTitle:"Blog | CouponsMarkets",
+    blogPageMetaDesc:"Shopping tips, deal roundups and stories from the CouponsMarkets team.",
+    blogHeroTitle:"CouponsMarkets Blog",
+    blogHeroSub:"Shopping tips, deal roundups and stories from our team.",
+    blogEmpty:"No blog posts yet.",
+    blogPostNotFoundTitle:"Post not found",
+    blogPostNotFoundSub:"We could not find this blog post. Browse all posts instead.",
+    backToBlog:"Back to blog"},
   vi:{searchPh:"Tim cua hang, san pham, ma...",
     heroTitle:"Ma giam gia moi nhat, cap nhat moi ngay",
     heroSub:"Kham pha ma giam gia va uu dai moi nhat tu cac cua hang truc tuyen yeu thich - chi can chon 1 ma va dung khi thanh toan. CouponsMarkets mang den ma khuyen mai, coupon va uu dai mua sam cho hang ngan san pham va thuong hieu.",
@@ -146,7 +157,16 @@ const UI = {
     categoryMetaDescTpl:"Xem cac ma giam gia {category} da kiem tra, cap nhat thuong xuyen. Bam de xem va luu.",
     categoryHeroSubTpl:"Ma giam gia va uu dai da kiem tra cho danh muc {category}, cap nhat thuong xuyen. Bam de hien ma.",
     categoryNotFoundTitle:"Khong tim thay danh muc",
-    categoryNotFoundSub:"Khong tim thay danh muc nay. Xem tat ca ma giam gia hien co."}
+    categoryNotFoundSub:"Khong tim thay danh muc nay. Xem tat ca ma giam gia hien co.",
+    navBlog:"Blog",
+    blogPageTitle:"Blog | CouponsMarkets",
+    blogPageMetaDesc:"Meo mua sam, tong hop uu dai va cau chuyen tu doi ngu CouponsMarkets.",
+    blogHeroTitle:"Blog CouponsMarkets",
+    blogHeroSub:"Meo mua sam, tong hop uu dai va cau chuyen tu doi ngu chung toi.",
+    blogEmpty:"Chua co bai blog nao.",
+    blogPostNotFoundTitle:"Khong tim thay bai viet",
+    blogPostNotFoundSub:"Khong tim thay bai viet nay. Xem tat ca bai viet khac.",
+    backToBlog:"Ve trang blog"}
 };
 
 /* ================================================================
@@ -305,6 +325,44 @@ function renderPageContent(raw){
   }).join('');
 }
 
+/* Lay danh sach bai Blog tu Sheet. Nhieu dong cung "Ten Du An" duoc gom
+   thanh 1 bai voi nhieu anh (moi dong 1 anh) - "Noi Dung" chi can dien
+   o 1 dong bat ky trong nhom, dong khac de trong. */
+function fetchBlogPosts(){
+  if(!SHEET_BLOG_URL) return Promise.resolve([]);
+  return fetch(SHEET_BLOG_URL).then(function(r){return r.json()}).then(function(rows){
+    const map={}, order=[];
+    (rows||[]).forEach(function(r){
+      const project=(r[BLOG_COL.project]||"").trim();
+      if(!project) return;
+      const image=(r[BLOG_COL.image]||"").trim();
+      const content=(r[BLOG_COL.content]||"").trim();
+      const key=slugify(project);
+      if(!map[key]){
+        map[key]={slug:key, title:project, content:"", images:[]};
+        order.push(key);
+      }
+      if(image) map[key].images.push(image);
+      if(!map[key].content && content) map[key].content=content;
+    });
+    return order.map(function(k){return map[k]});
+  }).catch(function(){ return []; });
+}
+
+function blogCardHTML(post, t){
+  const cover=post.images[0]
+    ? '<img class="blog-cover" src="'+escapeHTML(post.images[0])+'" alt="'+escapeHTML(post.title)+'" loading="lazy">'
+    : '';
+  return '<a class="blog-card" href="/blog/'+encodeURIComponent(post.slug)+'">'+cover+'<h3>'+escapeHTML(post.title)+'</h3></a>';
+}
+
+function blogGalleryHTML(images){
+  if(!images.length) return '';
+  return '<div class="blog-gallery">'+images.map(function(img){
+    return '<img src="'+escapeHTML(img)+'" alt="" loading="lazy">';
+  }).join('')+'</div>';
+}
+
 /* Gom cac dong coupon (moi dong = 1 ma) thanh cac SAN PHAM.
    Cac dong cung Brand + "Ma san pham" (hoac cung tieu de neu de trong o
    Ma san pham) duoc gom vao 1 trang san pham voi nhieu ma. Anh/so sao/
@@ -358,9 +416,9 @@ function renderMarquee(brands, marqueeEl, trackEl){
 }
 
 /* The card tren trang chu / trang brand / trang danh muc: la link dan
-   sang trang lay ma rieng cua tao (/coupons/xxx), mo o tab moi. Chua mo
-   link affiliate o buoc nay - affiliate chi mo khi khach bam "View Code"
-   ngay tren trang /coupons/xxx (xem attachCodeEvents). */
+   sang trang lay ma rieng cua tao (/coupons/xxx), dieu huong CUNG mot tab
+   (khong mo tab moi). Affiliate chi mo khi khach tu bam "Visit Store"
+   ngay tren trang /coupons/xxx sau khi da xem ma (xem attachCodeEvents). */
 function productCardHTML(p, t){
   const logo=p.logo
     ? '<img class="brand-logo" src="'+escapeHTML(p.logo)+'" alt="'+escapeHTML(p.brand)+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'brand-fallback\\\'>'+escapeHTML(p.brand.charAt(0))+'</div>\'">'
@@ -369,10 +427,12 @@ function productCardHTML(p, t){
   const bestDiscount=(p.offers.map(function(o){return o.discount}).filter(Boolean)[0])||'';
   const disc=bestDiscount?'<span class="discount">'+escapeHTML(bestDiscount)+'</span>':'';
   const btnLabel=p.offers.length>1 ? tpl(t.viewCodesTpl,{n:p.offers.length}) : t.viewDeal;
-  return '<a class="card" href="/coupons/'+encodeURIComponent(p.slug)+'" target="_blank"><div class="card-top">'+logo+'<div style="min-width:0">'+tags+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
+  return '<a class="card" href="/coupons/'+encodeURIComponent(p.slug)+'"><div class="card-top">'+logo+'<div style="min-width:0">'+tags+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
 }
 
-/* Dong hien thi 1 ma / 1 uu dai ben trong trang san pham. */
+/* Dong hien thi 1 ma / 1 uu dai ben trong trang san pham. Nut "Visit Store"
+   luon co san trong HTML nhung an bang CSS (.offer-visit-link) cho toi khi
+   ma duoc hien (xem attachCodeEvents them class "revealed"). */
 function offerRowHTML(offer, t, ctx){
   ctx=ctx||{};
   const brandInitial=escapeHTML((ctx.brand||'?').charAt(0));
@@ -386,7 +446,7 @@ function offerRowHTML(offer, t, ctx){
     return '<div class="offer-card">'+left
       +'<div class="offer-card-mid">'+badges+'<div class="code-preview">'+escapeHTML(offer.code)+'</div></div>'
       +'<div class="offer-cta-group">'
-        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'" data-url="'+escapeHTML(offer.url)+'">'+escapeHTML(t.reveal)+'</button>'
+        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'">'+escapeHTML(t.reveal)+'</button>'
         +'<a class="offer-visit-link" href="'+escapeHTML(offer.url)+'" target="_blank" rel="nofollow noopener sponsored">'+escapeHTML(t.visitStore)+'</a>'
       +'</div>'
       +'</div>';
@@ -418,29 +478,23 @@ function reviewCardHTML(p){
   return '<aside class="review-card">'+logoBox+'<div class="review-brand">'+escapeHTML(p.brand)+'</div>'+ratingRow+divider+img+review+'</aside>';
 }
 
-/* Nut "Get Code" tren trang /coupons/xxx: lan bam dau tien trong trang
-   (bat ke bam ma nao) se mo dong thoi 2 tab moi - tab affiliate mo TRUOC,
-   tab trang /coupons/xxx hien tai mo SAU (mo lai chinh URL dang xem).
-   Vi tab mo sau cung la tab duoc trinh duyet dua len active/focus, khach
-   se thay minh van dang o trang lay ma cua tao, tab affiliate nam duoi.
-   Cac lan bam ma khac sau do trong cung trang chi hien ma + copy, khong
-   mo lai tab nao nua. */
+/* Nut "Get Code" tren trang /coupons/xxx: bam vao la hien ma + tu dong
+   copy ngay, khong mo tab/cua so nao ca. Nut "Visit Store" (an san trong
+   HTML, xem offerRowHTML) chi hien ra SAU khi ma da duoc hien - khach tu
+   bam nut do (link that, trinh duyet tu mo tab moi binh thuong) thi moi
+   sang trang affiliate. */
 function attachCodeEvents(gridEl){
-  let firstRevealDone=false;
   gridEl.addEventListener('click',function(e){
     const btn=e.target.closest('.code-btn');if(!btn)return;
-    const code=btn.dataset.code, url=btn.dataset.url, t=UI[lang];
+    const code=btn.dataset.code, t=UI[lang];
     const card=btn.closest('.offer-card');
     const preview=card?card.querySelector('.code-preview'):null;
+    const visitLink=card?card.querySelector('.offer-visit-link'):null;
     if(!btn.classList.contains('revealed')){
       btn.classList.add('revealed');
       if(preview)preview.classList.add('revealed');
+      if(visitLink)visitLink.classList.add('revealed');
       btn.textContent=t.copy;
-      if(!firstRevealDone){
-        firstRevealDone=true;
-        if(url && url!=='#') window.open(url, '_blank', 'noopener,noreferrer');
-        window.open(location.href, '_blank');
-      }
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
     }else{
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
@@ -452,7 +506,7 @@ function applyFooterUI(t){
   const set=function(id,val){const el=document.getElementById(id);if(el)el.textContent=val;};
   set('footTag',t.footTag);set('footInfo',t.footInfo);set('footAbout',t.footAbout);
   set('footPrivacy',t.footPrivacy);set('footTerms',t.footTerms);set('footContact',t.footContact);
-  set('footNote',t.footNote);
+  set('footBlog',t.navBlog);set('footNote',t.footNote);
 }
 
 /* Structured data: mo ta cac san pham bang schema.org, khong bia dat gia/tien te

@@ -3,6 +3,7 @@
 
 $BaseUrl = "https://couponsmarkets.com"   # <-- doi thanh ten mien that cua anh
 $SheetCouponsUrl = "https://opensheet.elk.sh/1jzl1UmcEQBO-LJuOtzLkAiZ1xm5UjjR5v2qOJL3OQ3A/M%C3%A3%20Coupon"
+$SheetBlogUrl = "https://opensheet.elk.sh/1jzl1UmcEQBO-LJuOtzLkAiZ1xm5UjjR5v2qOJL3OQ3A/B%C3%A0i%20Blog"
 
 function Slugify([string]$s) {
     $s = $s.ToLowerInvariant()
@@ -53,6 +54,23 @@ foreach ($detailKey in $productOrder) {
     [void]$couponSlugs.Add($slug)
 }
 
+# Gom bai Blog theo "Ten Du An" (moi dong = 1 anh, cung ten = 1 bai)
+$blogSlugs = New-Object System.Collections.Generic.List[string]
+$blogSeen = @{}
+try {
+    $blogRows = Invoke-RestMethod -Uri $SheetBlogUrl
+    foreach ($r in $blogRows) {
+        $project = ("" + $r.'Tên Dự Án').Trim()
+        if (-not $project) { continue }
+        $slug = Slugify $project
+        if ($slug -eq "" -or $blogSeen.ContainsKey($slug)) { continue }
+        $blogSeen[$slug] = $true
+        [void]$blogSlugs.Add($slug)
+    }
+} catch {
+    Write-Host "Khong doc duoc tab Bai Blog (co the chua co du lieu), bo qua."
+}
+
 $today = Get-Date -Format "yyyy-MM-dd"
 
 # 12 danh muc co dinh (phai khop voi mang CATEGORIES trong assets/data.js)
@@ -83,6 +101,11 @@ foreach ($slug in $couponSlugs) {
     $urls += "  <url>`n    <loc>$BaseUrl/coupons/$slug</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>weekly</changefreq>`n    <priority>0.6</priority>`n  </url>"
 }
 
+$urls += "  <url>`n    <loc>$BaseUrl/blog</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>weekly</changefreq>`n    <priority>0.5</priority>`n  </url>"
+foreach ($slug in $blogSlugs) {
+    $urls += "  <url>`n    <loc>$BaseUrl/blog/$slug</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>monthly</changefreq>`n    <priority>0.4</priority>`n  </url>"
+}
+
 $xml = @"
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- File nay duoc tao/cap nhat tu dong boi generate-sitemap.ps1.
@@ -94,4 +117,4 @@ $($urls -join "`n")
 
 $outPath = Join-Path $PSScriptRoot "sitemap.xml"
 $xml | Set-Content -Path $outPath -Encoding utf8
-Write-Host "Da ghi $outPath voi $($urls.Count) URL (1 trang chu, 4 trang tinh, 12 danh muc, $($brands.Count) cua hang, $($couponSlugs.Count) san pham)."
+Write-Host "Da ghi $outPath voi $($urls.Count) URL (1 trang chu, 4 trang tinh, 12 danh muc, $($brands.Count) cua hang, $($couponSlugs.Count) san pham, $($blogSlugs.Count) bai blog)."
