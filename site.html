@@ -70,9 +70,10 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=14"></script>
+<script src="/assets/data.js?v=15"></script>
 <script>
 const grid=document.getElementById('grid');
+attachCardEvents(grid);
 
 /* Lay slug tu duong dan dep /site/xxx (can rule redirect o hosting, xem _redirects / vercel.json).
    Neu mo truc tiep site.html (test cuc bo), dung ?store=xxx thay the. */

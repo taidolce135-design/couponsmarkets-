@@ -65,9 +65,10 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=14"></script>
+<script src="/assets/data.js?v=15"></script>
 <script>
 const grid=document.getElementById('grid');
+attachCardEvents(grid);
 let query='', CATEGORY_PRODUCTS=[];
 
 function currentCategorySlug(){

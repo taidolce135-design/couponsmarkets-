@@ -356,7 +356,20 @@ function productCardHTML(p, t){
   const bestDiscount=(p.offers.map(function(o){return o.discount}).filter(Boolean)[0])||'';
   const disc=bestDiscount?'<span class="discount">'+escapeHTML(bestDiscount)+'</span>':'';
   const btnLabel=p.offers.length>1 ? tpl(t.viewCodesTpl,{n:p.offers.length}) : t.viewDeal;
-  return '<a class="card" href="/product/'+encodeURIComponent(p.slug)+'"><div class="card-top">'+logo+'<div style="min-width:0">'+tags+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
+  const affUrl=(p.offers.find(function(o){return o.url && o.url!=='#'})||{}).url||'';
+  return '<a class="card" href="/product/'+encodeURIComponent(p.slug)+'" target="_blank" data-aff-url="'+escapeHTML(affUrl)+'"><div class="card-top">'+logo+'<div style="min-width:0">'+tags+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
+}
+
+/* Khi bam vao 1 the san pham tren trang danh sach: mo trang chi tiet cua
+   minh o tab moi (the <a target=_blank> that, trinh duyet tu xu ly) VA
+   dong thoi mo them 1 tab nua sang link affiliate. Khong dong/an tab nao
+   ca - ca 2 la dieu huong that, tab hien tai (trang danh sach) khong doi. */
+function attachCardEvents(gridEl){
+  gridEl.addEventListener('click',function(e){
+    const card=e.target.closest('a.card');if(!card)return;
+    const affUrl=card.dataset.affUrl;
+    if(affUrl) window.open(affUrl, '_blank', 'noreferrer');
+  });
 }
 
 /* Dong hien thi 1 ma / 1 uu dai ben trong trang san pham. */
@@ -373,7 +386,7 @@ function offerRowHTML(offer, t, ctx){
     return '<div class="offer-card">'+left
       +'<div class="offer-card-mid">'+badges+'<div class="code-preview">'+escapeHTML(offer.code)+'</div></div>'
       +'<div class="offer-cta-group">'
-        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'" data-url="'+escapeHTML(offer.url)+'">'+escapeHTML(t.reveal)+'</button>'
+        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'">'+escapeHTML(t.reveal)+'</button>'
         +'<a class="offer-visit-link" href="'+escapeHTML(offer.url)+'" target="_blank" rel="nofollow noopener sponsored">'+escapeHTML(t.visitStore)+'</a>'
       +'</div>'
       +'</div>';
@@ -405,23 +418,14 @@ function reviewCardHTML(p){
   return '<aside class="review-card">'+logoBox+'<div class="review-brand">'+escapeHTML(p.brand)+'</div>'+ratingRow+divider+img+review+'</aside>';
 }
 
-/* Mo link affiliate o tab moi khi khach lan dau hien ma, khach van o lai
-   trang coupon. Chi mo 1 lan / 1 luot xem trang (khong mo lai o ma thu 2). */
-function openAffiliateInBackground(url){
-  if(!url||url.indexOf('#')===0)return;
-  const popup=window.open(url, '_blank', 'noreferrer');
-  if(popup){
-    setTimeout(function(){
-      try{ popup.close(); }catch(e){}
-    }, 1500);
-  }
-}
-
-let affiliateOpenedThisPage=false;
+/* Nut "Get Code" tren trang chi tiet gio chi hien ma + copy - khong tu mo
+   tab affiliate nua. Viec mo tab affiliate da xay ra tu luc khach bam vao
+   the san pham o trang danh sach (xem attachCardEvents), nen o day khong
+   can lam lai (tranh mo them 1 tab thu 3 gay roi mat). */
 function attachCodeEvents(gridEl){
   gridEl.addEventListener('click',function(e){
     const btn=e.target.closest('.code-btn');if(!btn)return;
-    const code=btn.dataset.code,url=btn.dataset.url,t=UI[lang];
+    const code=btn.dataset.code,t=UI[lang];
     const card=btn.closest('.offer-card');
     const preview=card?card.querySelector('.code-preview'):null;
     if(!btn.classList.contains('revealed')){
@@ -429,10 +433,6 @@ function attachCodeEvents(gridEl){
       if(preview)preview.classList.add('revealed');
       btn.textContent=t.copy;
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
-      if(!affiliateOpenedThisPage){
-        affiliateOpenedThisPage=true;
-        openAffiliateInBackground(url);
-      }
     }else{
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
     }
