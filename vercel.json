@@ -1,7 +1,10 @@
 {
+  "redirects": [
+    { "source": "/product/:slug", "destination": "/coupons/:slug", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/site/:slug", "destination": "/site.html" },
-    { "source": "/product/:slug", "destination": "/product.html" },
+    { "source": "/coupons/:slug", "destination": "/coupons.html" },
     { "source": "/category/:slug", "destination": "/category.html" },
     { "source": "/about", "destination": "/page.html" },
     { "source": "/privacy-policy", "destination": "/page.html" },

@@ -76,14 +76,14 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=15"></script>
+<script src="/assets/data.js?v=16"></script>
 <script>
 const offersList=document.getElementById('offersList');
 const productColumns=document.getElementById('productColumns');
 
-function currentProductSlug(){
+function currentCouponSlug(){
   const parts=location.pathname.split('/').filter(Boolean);
-  const i=parts.indexOf('product');
+  const i=parts.indexOf('coupons');
   if(i!==-1 && parts[i+1]) return decodeURIComponent(parts[i+1]).toLowerCase();
   const p=new URLSearchParams(location.search);
   if(p.has('slug')) return p.get('slug').toLowerCase();
@@ -124,7 +124,7 @@ function renderProduct(p, t){
   if(existingCard) existingCard.remove();
   if(reviewHTML) productColumns.insertAdjacentHTML('beforeend', reviewHTML);
 
-  const url=location.origin+'/product/'+p.slug;
+  const url=location.origin+'/coupons/'+p.slug;
   const title=tpl(t.productTitleTpl,{title:p.title,brand:p.brand});
   const desc=tpl(t.productMetaDescTpl,{title:p.title,brand:p.brand});
   document.getElementById('metaTitle').textContent=title;
@@ -151,7 +151,7 @@ attachCodeEvents(offersList);
 
 const t=UI[lang];
 applyStaticUI(t);
-const slug=currentProductSlug();
+const slug=currentCouponSlug();
 offersList.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
 
 fetchData().then(function(data){

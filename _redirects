@@ -1,5 +1,6 @@
 /site/*     /site.html      200
-/product/*  /product.html   200
+/product/*  /coupons/:splat 301
+/coupons/*  /coupons.html   200
 /category/* /category.html  200
 /about            /page.html   200
 /privacy-policy   /page.html   200

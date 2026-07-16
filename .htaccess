@@ -5,7 +5,11 @@ RewriteRule ^site/[a-zA-Z0-9-]+/?$ /site.html [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^product/[a-zA-Z0-9-]+/?$ /product.html [L]
+RewriteRule ^product/([a-zA-Z0-9-]+)/?$ /coupons/$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^coupons/[a-zA-Z0-9-]+/?$ /coupons.html [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

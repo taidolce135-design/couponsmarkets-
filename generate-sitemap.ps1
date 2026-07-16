@@ -19,16 +19,38 @@ $brands = $rows |
     ForEach-Object { $_.Trim() } |
     Sort-Object -Unique
 
-# Gom theo san pham: cung Brand + "Ma san pham" (hoac cung tieu de neu de trong) = 1 trang /product/xxx
-$productKeys = New-Object System.Collections.Generic.HashSet[string]
+# Gom theo san pham: cung Brand + "Ma san pham" (hoac cung tieu de neu de trong) = 1 trang /coupons/xxx.
+# Key gom nhom (detailKey) dung day du de khong gop nham 2 san pham khac nhau; slug URL thuc te
+# thi NGAN hon - chi Brand + "Ma san pham" - va tu them -2, -3... neu bi trung giua cac san pham.
+$productOrder = New-Object System.Collections.Generic.List[string]
+$productInfo = @{}
 foreach ($r in $rows) {
     $brand = ("" + $r.Brand).Trim()
     if (-not $brand) { continue }
     $productSlugRaw = ("" + $r.'Mã sản phẩm').Trim()
     $title = ("" + $r.'Tiêu đề tiếng Anh').Trim()
     $part = if ($productSlugRaw) { Slugify $productSlugRaw } else { Slugify $title }
-    $key = (Slugify $brand) + "--" + $part
-    if ($key -ne "--") { [void]$productKeys.Add($key) }
+    $detailKey = (Slugify $brand) + "--" + $part
+    if ($detailKey -eq "--") { continue }
+    if (-not $productInfo.ContainsKey($detailKey)) {
+        $productInfo[$detailKey] = @{ Brand = $brand; ProductSlugRaw = $productSlugRaw }
+        [void]$productOrder.Add($detailKey)
+    } elseif (-not $productInfo[$detailKey].ProductSlugRaw -and $productSlugRaw) {
+        $productInfo[$detailKey].ProductSlugRaw = $productSlugRaw
+    }
+}
+
+$usedSlugs = @{}
+$couponSlugs = New-Object System.Collections.Generic.List[string]
+foreach ($detailKey in $productOrder) {
+    $info = $productInfo[$detailKey]
+    $base = Slugify $info.Brand
+    if ($info.ProductSlugRaw) { $base = $base + "-" + (Slugify $info.ProductSlugRaw) }
+    $slug = $base
+    $n = 2
+    while ($usedSlugs.ContainsKey($slug)) { $slug = "$base-$n"; $n++ }
+    $usedSlugs[$slug] = $true
+    [void]$couponSlugs.Add($slug)
 }
 
 $today = Get-Date -Format "yyyy-MM-dd"
@@ -57,8 +79,8 @@ foreach ($b in $brands) {
     $urls += "  <url>`n    <loc>$BaseUrl/site/$slug</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>weekly</changefreq>`n    <priority>0.7</priority>`n  </url>"
 }
 
-foreach ($key in $productKeys) {
-    $urls += "  <url>`n    <loc>$BaseUrl/product/$key</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>weekly</changefreq>`n    <priority>0.6</priority>`n  </url>"
+foreach ($slug in $couponSlugs) {
+    $urls += "  <url>`n    <loc>$BaseUrl/coupons/$slug</loc>`n    <lastmod>$today</lastmod>`n    <changefreq>weekly</changefreq>`n    <priority>0.6</priority>`n  </url>"
 }
 
 $xml = @"
@@ -72,4 +94,4 @@ $($urls -join "`n")
 
 $outPath = Join-Path $PSScriptRoot "sitemap.xml"
 $xml | Set-Content -Path $outPath -Encoding utf8
-Write-Host "Da ghi $outPath voi $($urls.Count) URL (1 trang chu, 4 trang tinh, 12 danh muc, $($brands.Count) cua hang, $($productKeys.Count) san pham)."
+Write-Host "Da ghi $outPath voi $($urls.Count) URL (1 trang chu, 4 trang tinh, 12 danh muc, $($brands.Count) cua hang, $($couponSlugs.Count) san pham)."

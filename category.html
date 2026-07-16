@@ -65,10 +65,9 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=15"></script>
+<script src="/assets/data.js?v=16"></script>
 <script>
 const grid=document.getElementById('grid');
-attachCardEvents(grid);
 let query='', CATEGORY_PRODUCTS=[];
 
 function currentCategorySlug(){
@@ -138,7 +137,7 @@ if(!catInfo){
           "@type":"ItemList",
           "itemListElement": CATEGORY_PRODUCTS.map(function(p,i){
             return {"@type":"ListItem","position":i+1,"item":{
-              "@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/product/'+p.slug,
+              "@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,
               "seller":{"@type":"Organization","name":p.brand}
             }};
           })

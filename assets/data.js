@@ -313,26 +313,37 @@ function productKey(brand, productSlugRaw, title){
   return slugify(brand) + '--' + (productSlugRaw ? slugify(productSlugRaw) : slugify(title));
 }
 
+/* URL /coupons/xxx dung slug NGAN: ten thuong hieu + "Ma san pham" (neu
+   Sheet co dien), khong noi them tieu de day du nhu key gom nhom o tren.
+   Neu 2 san pham cung thuong hieu ra cung 1 slug ngan (vi du deu de trong
+   Ma san pham), tu dong them -2, -3... de tranh trung URL. */
 function groupToProducts(coupons){
   const map={}, order=[];
   coupons.forEach(function(c){
     const key=productKey(c.brand, c.productSlug, c.title);
     if(!map[key]){
-      map[key]={slug:key, brand:c.brand, logo:c.logo, title:c.title, desc:c.desc, categoryRaw:c.categoryRaw,
-        image:"", rating:"", review:"", offers:[]};
+      map[key]={brand:c.brand, logo:c.logo, title:c.title, desc:c.desc, categoryRaw:c.categoryRaw,
+        productSlug:c.productSlug, image:"", rating:"", review:"", offers:[]};
       order.push(key);
     }
     if(!map[key].logo && c.logo) map[key].logo=c.logo;
     if(!map[key].categoryRaw && c.categoryRaw) map[key].categoryRaw=c.categoryRaw;
+    if(!map[key].productSlug && c.productSlug) map[key].productSlug=c.productSlug;
     if(!map[key].image && c.image) map[key].image=c.image;
     if(!map[key].rating && c.rating) map[key].rating=c.rating;
     if(!map[key].review && c.review) map[key].review=c.review;
     if(c.code || (c.url && c.url!=='#')) map[key].offers.push({code:c.code, discount:c.discount, url:c.url});
   });
+  const usedSlugs={};
   return order.map(function(k){
     const p=map[k];
     p.categories=resolveCategories(p.categoryRaw);
     delete p.categoryRaw;
+    const base=slugify(p.brand)+(p.productSlug?'-'+slugify(p.productSlug):'');
+    let slug=base, n=2;
+    while(usedSlugs[slug]){ slug=base+'-'+n; n++; }
+    usedSlugs[slug]=true;
+    p.slug=slug;
     return p;
   }).filter(function(p){return p.offers.length;});
 }
@@ -346,8 +357,10 @@ function renderMarquee(brands, marqueeEl, trackEl){
   trackEl.innerHTML=one+one;
 }
 
-/* The card tren trang chu / trang brand: gio la link dan sang trang
-   san pham rieng (/product/xxx) de chay Ads, khong hien ma truc tiep nua. */
+/* The card tren trang chu / trang brand / trang danh muc: la link dan
+   sang trang lay ma rieng cua tao (/coupons/xxx), mo o tab moi. Chua mo
+   link affiliate o buoc nay - affiliate chi mo khi khach bam "View Code"
+   ngay tren trang /coupons/xxx (xem attachCodeEvents). */
 function productCardHTML(p, t){
   const logo=p.logo
     ? '<img class="brand-logo" src="'+escapeHTML(p.logo)+'" alt="'+escapeHTML(p.brand)+'" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'brand-fallback\\\'>'+escapeHTML(p.brand.charAt(0))+'</div>\'">'
@@ -356,20 +369,7 @@ function productCardHTML(p, t){
   const bestDiscount=(p.offers.map(function(o){return o.discount}).filter(Boolean)[0])||'';
   const disc=bestDiscount?'<span class="discount">'+escapeHTML(bestDiscount)+'</span>':'';
   const btnLabel=p.offers.length>1 ? tpl(t.viewCodesTpl,{n:p.offers.length}) : t.viewDeal;
-  const affUrl=(p.offers.find(function(o){return o.url && o.url!=='#'})||{}).url||'';
-  return '<a class="card" href="/product/'+encodeURIComponent(p.slug)+'" target="_blank" data-aff-url="'+escapeHTML(affUrl)+'"><div class="card-top">'+logo+'<div style="min-width:0">'+tags+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
-}
-
-/* Khi bam vao 1 the san pham tren trang danh sach: mo trang chi tiet cua
-   minh o tab moi (the <a target=_blank> that, trinh duyet tu xu ly) VA
-   dong thoi mo them 1 tab nua sang link affiliate. Khong dong/an tab nao
-   ca - ca 2 la dieu huong that, tab hien tai (trang danh sach) khong doi. */
-function attachCardEvents(gridEl){
-  gridEl.addEventListener('click',function(e){
-    const card=e.target.closest('a.card');if(!card)return;
-    const affUrl=card.dataset.affUrl;
-    if(affUrl) window.open(affUrl, '_blank', 'noreferrer');
-  });
+  return '<a class="card" href="/coupons/'+encodeURIComponent(p.slug)+'" target="_blank"><div class="card-top">'+logo+'<div style="min-width:0">'+tags+'<div class="brand-name">'+escapeHTML(p.brand)+'</div></div>'+disc+'</div><h3>'+escapeHTML(p.title)+'</h3><p class="desc">'+escapeHTML(p.desc)+'</p><div class="deal-btn">'+escapeHTML(btnLabel)+'</div></a>';
 }
 
 /* Dong hien thi 1 ma / 1 uu dai ben trong trang san pham. */
@@ -386,7 +386,7 @@ function offerRowHTML(offer, t, ctx){
     return '<div class="offer-card">'+left
       +'<div class="offer-card-mid">'+badges+'<div class="code-preview">'+escapeHTML(offer.code)+'</div></div>'
       +'<div class="offer-cta-group">'
-        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'">'+escapeHTML(t.reveal)+'</button>'
+        +'<button type="button" class="offer-cta code-btn" data-code="'+escapeHTML(offer.code)+'" data-url="'+escapeHTML(offer.url)+'">'+escapeHTML(t.reveal)+'</button>'
         +'<a class="offer-visit-link" href="'+escapeHTML(offer.url)+'" target="_blank" rel="nofollow noopener sponsored">'+escapeHTML(t.visitStore)+'</a>'
       +'</div>'
       +'</div>';
@@ -418,20 +418,29 @@ function reviewCardHTML(p){
   return '<aside class="review-card">'+logoBox+'<div class="review-brand">'+escapeHTML(p.brand)+'</div>'+ratingRow+divider+img+review+'</aside>';
 }
 
-/* Nut "Get Code" tren trang chi tiet gio chi hien ma + copy - khong tu mo
-   tab affiliate nua. Viec mo tab affiliate da xay ra tu luc khach bam vao
-   the san pham o trang danh sach (xem attachCardEvents), nen o day khong
-   can lam lai (tranh mo them 1 tab thu 3 gay roi mat). */
+/* Nut "Get Code" tren trang /coupons/xxx: lan bam dau tien trong trang
+   (bat ke bam ma nao) se mo dong thoi 2 tab moi - tab affiliate mo TRUOC,
+   tab trang /coupons/xxx hien tai mo SAU (mo lai chinh URL dang xem).
+   Vi tab mo sau cung la tab duoc trinh duyet dua len active/focus, khach
+   se thay minh van dang o trang lay ma cua tao, tab affiliate nam duoi.
+   Cac lan bam ma khac sau do trong cung trang chi hien ma + copy, khong
+   mo lai tab nao nua. */
 function attachCodeEvents(gridEl){
+  let firstRevealDone=false;
   gridEl.addEventListener('click',function(e){
     const btn=e.target.closest('.code-btn');if(!btn)return;
-    const code=btn.dataset.code,t=UI[lang];
+    const code=btn.dataset.code, url=btn.dataset.url, t=UI[lang];
     const card=btn.closest('.offer-card');
     const preview=card?card.querySelector('.code-preview'):null;
     if(!btn.classList.contains('revealed')){
       btn.classList.add('revealed');
       if(preview)preview.classList.add('revealed');
       btn.textContent=t.copy;
+      if(!firstRevealDone){
+        firstRevealDone=true;
+        if(url && url!=='#') window.open(url, '_blank', 'noopener,noreferrer');
+        window.open(location.href, '_blank');
+      }
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
     }else{
       if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){showToast(t.copied+code)});
@@ -461,7 +470,7 @@ function buildCouponJsonLd(products){
           "@type":"Offer",
           "name": p.title,
           "description": p.desc,
-          "url": origin + '/product/' + p.slug,
+          "url": origin + '/coupons/' + p.slug,
           "category": p.categories.join(', '),
           "seller":{"@type":"Organization","name":p.brand}
         }
