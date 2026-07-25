@@ -1,7 +1,7 @@
 ﻿# Chay lai script nay moi khi them brand/san pham moi vao Google Sheet, roi upload sitemap.xml len hosting.
 # Cach chay: mo PowerShell trong thu muc project, go:  .\generate-sitemap.ps1
 
-$BaseUrl = "https://couponsmarkets.com"   # <-- doi thanh ten mien that cua anh
+$BaseUrl = "https://defiocoupon.com"   # <-- doi thanh ten mien that cua anh
 $SheetCouponsUrl = "https://opensheet.elk.sh/1jzl1UmcEQBO-LJuOtzLkAiZ1xm5UjjR5v2qOJL3OQ3A/M%C3%A3%20Coupon"
 $SheetBlogUrl = "https://opensheet.elk.sh/1jzl1UmcEQBO-LJuOtzLkAiZ1xm5UjjR5v2qOJL3OQ3A/B%C3%A0i%20Blog"
 
