@@ -22,7 +22,10 @@
 <link id="metaCanonical" rel="canonical" href="https://couponsmarkets.com/">
 
 <meta name="theme-color" content="#3DAF1F">
-<link rel="stylesheet" href="/assets/style.css?v=16">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=21">
 </head>
 <body>
 
@@ -32,6 +35,7 @@
     <div class="search"><input type="text" id="searchInput" aria-label="Search">
       <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     </div>
+    <nav class="hd-nav"><a href="/blog" id="navBlog"></a><a href="/about" id="navAbout"></a></nav>
   </div>
 </header>
 
@@ -47,6 +51,10 @@
     <div class="foot">
       <div><div class="logo" style="margin-bottom:8px"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></div><div id="footTag"></div></div>
       <div>
+        <div class="foot-heading" id="footCategories"></div>
+        <div class="foot-cat-grid" id="footCatGrid"></div>
+      </div>
+      <div>
         <div style="font-weight:700;color:var(--footer-heading);margin-bottom:8px" id="footInfo"></div>
         <div><a href="/about" id="footAbout"></a></div>
         <div><a href="/privacy-policy" id="footPrivacy"></a></div>
@@ -59,7 +67,7 @@
   </div>
 </footer>
 
-<script src="/assets/data.js?v=16"></script>
+<script src="/assets/data.js?v=21"></script>
 <script>
 function currentPageSlug(){
   const path=location.pathname.replace(/^\/|\/$/g,'');
@@ -71,6 +79,8 @@ function currentPageSlug(){
 function applyStaticUI(t){
   document.documentElement.lang=lang;
   document.getElementById('searchInput').placeholder=t.searchPh;
+  document.getElementById('navBlog').textContent=t.navBlog;
+  document.getElementById('navAbout').textContent=t.navAbout;
   document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
   applyFooterUI(t);
 }

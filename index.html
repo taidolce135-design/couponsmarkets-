@@ -33,7 +33,10 @@
 {"@context":"https://schema.org","@type":"WebSite","name":"CouponsMarkets","url":"https://couponsmarkets.com/"}
 </script>
 
-<link rel="stylesheet" href="/assets/style.css?v=16">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=21">
 </head>
 <body>
 
@@ -43,13 +46,36 @@
     <div class="search"><input type="text" id="searchInput" aria-label="Search">
       <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     </div>
+    <nav class="hd-nav"><a href="/blog" id="navBlog"></a><a href="/about" id="navAbout"></a></nav>
   </div>
 </header>
 
 <main>
   <div class="wrap">
-    <section class="hero"><h1 id="heroTitle"></h1><p id="heroSub"></p><p id="heroNote" class="hero-note"></p></section>
+    <section class="hero">
+      <h1 id="heroTitle"></h1><p id="heroSub"></p><p id="heroNote" class="hero-note"></p>
+      <div class="trust-strip">
+        <span>🔒 <span id="trustSecure"></span></span>
+        <span>✅ <span id="trustVerified"></span></span>
+        <span>🔄 <span id="trustDaily"></span></span>
+        <span>🆓 <span id="trustFree"></span></span>
+      </div>
+    </section>
     <img class="hero-banner" src="https://images.stockcake.com/public/7/8/0/780e1c85-65a3-4178-b3f7-4f416804d38b_large/joyful-shopping-friends-stockcake.jpg" alt="CouponsMarkets" loading="lazy">
+  </div>
+
+  <div class="wrap">
+    <h2 class="section-title" id="howTitle"></h2>
+    <section class="how-it-works">
+      <div class="how-step"><div class="how-icon">🔍</div><h3 id="howStep1Title"></h3><p id="howStep1Sub"></p></div>
+      <div class="how-step"><div class="how-icon">🎯</div><h3 id="howStep2Title"></h3><p id="howStep2Sub"></p></div>
+      <div class="how-step"><div class="how-icon">💰</div><h3 id="howStep3Title"></h3><p id="howStep3Sub"></p></div>
+    </section>
+  </div>
+
+  <div class="wrap" id="featuredWrap" style="display:none">
+    <h2 class="section-title" id="featuredTitle"></h2>
+    <div class="featured-grid" id="featuredGrid"></div>
   </div>
 
   <div class="marquee" id="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeTrack"></div></div>
@@ -72,6 +98,10 @@
     <div class="foot">
       <div><div class="logo" style="margin-bottom:8px"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></div><div id="footTag"></div></div>
       <div>
+        <div class="foot-heading" id="footCategories"></div>
+        <div class="foot-cat-grid" id="footCatGrid"></div>
+      </div>
+      <div>
         <div style="font-weight:700;color:var(--footer-heading);margin-bottom:8px" id="footInfo"></div>
         <div><a href="/about" id="footAbout"></a></div>
         <div><a href="/privacy-policy" id="footPrivacy"></a></div>
@@ -86,16 +116,16 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/assets/data.js?v=16"></script>
+<script src="/assets/data.js?v=21"></script>
 <script>
 const grid=document.getElementById('grid');
 const catList=document.getElementById('catList');
 let activeCat='all', query='', PRODUCTS=[], BRANDS=[];
 
 function renderCatList(t){
-  const items=[{slug:'all',label:t.catAllLabel,href:'/'}].concat(CATEGORIES.map(function(c){return {slug:c.slug,label:lang==='vi'?c.vi:c.en,href:'/category/'+c.slug}}));
+  const items=[{slug:'all',label:t.catAllLabel,href:'/',icon:t.catAllIcon}].concat(CATEGORIES.map(function(c){return {slug:c.slug,label:lang==='vi'?c.vi:c.en,href:'/category/'+c.slug,icon:c.icon}}));
   catList.innerHTML=items.map(function(c){
-    return '<a href="'+c.href+'" data-cat="'+c.slug+'" class="'+(c.slug===activeCat?'active':'')+'">'+escapeHTML(c.label)+'</a>';
+    return '<a href="'+c.href+'" data-cat="'+c.slug+'" class="'+(c.slug===activeCat?'active':'')+'"><span class="cat-icon">'+c.icon+'</span>'+escapeHTML(c.label)+'</a>';
   }).join('');
 }
 
@@ -103,12 +133,44 @@ function applyUI(){
   const t=UI[lang];
   document.documentElement.lang=lang;
   document.getElementById('searchInput').placeholder=t.searchPh;
+  document.getElementById('navBlog').textContent=t.navBlog;
+  document.getElementById('navAbout').textContent=t.navAbout;
   document.getElementById('heroTitle').textContent=t.heroTitle;
   document.getElementById('heroSub').textContent=t.heroSub;
   document.getElementById('heroNote').textContent=t.heroNote;
   document.getElementById('catAllLabel').textContent=t.catAllLabel;
+  document.getElementById('trustSecure').textContent=t.trustSecure;
+  document.getElementById('trustVerified').textContent=t.trustVerified;
+  document.getElementById('trustDaily').textContent=t.trustDaily;
+  document.getElementById('trustFree').textContent=t.trustFree;
+  document.getElementById('howTitle').textContent=t.howTitle;
+  document.getElementById('howStep1Title').textContent=t.howStep1Title;
+  document.getElementById('howStep1Sub').textContent=t.howStep1Sub;
+  document.getElementById('howStep2Title').textContent=t.howStep2Title;
+  document.getElementById('howStep2Sub').textContent=t.howStep2Sub;
+  document.getElementById('howStep3Title').textContent=t.howStep3Title;
+  document.getElementById('howStep3Sub').textContent=t.howStep3Sub;
   renderCatList(t);
   applyFooterUI(t);
+}
+
+/* Lay % giam cao nhat trong 1 chuoi discount (vd "30%", "UP TO 30%").
+   Chuoi khong co so % (vd "FROM $89") tra ve 0, se tu nhien khong lot vao top. */
+function parseDiscountPercent(discount){
+  const m=(discount||'').match(/(\d+)\s*%/);
+  return m?parseInt(m[1],10):0;
+}
+
+function renderFeatured(t){
+  const featuredWrap=document.getElementById('featuredWrap');
+  const ranked=PRODUCTS.map(function(p){
+    const best=Math.max.apply(null,[0].concat(p.offers.map(function(o){return parseDiscountPercent(o.discount)})));
+    return {p:p,pct:best};
+  }).filter(function(r){return r.pct>0}).sort(function(a,b){return b.pct-a.pct});
+  if(!ranked.length){featuredWrap.style.display='none';return;}
+  document.getElementById('featuredTitle').textContent=t.featuredTitle;
+  document.getElementById('featuredGrid').innerHTML=ranked.slice(0,3).map(function(r){return productCardHTML(r.p,t)}).join('');
+  featuredWrap.style.display='';
 }
 
 function loadData(){
@@ -117,6 +179,7 @@ function loadData(){
   fetchData().then(function(data){
     PRODUCTS=groupToProducts(data.coupons); BRANDS=data.brands;
     renderMarquee(BRANDS, document.getElementById('marquee'), document.getElementById('marqueeTrack'));
+    renderFeatured(t);
     render();
     if(PRODUCTS.length) injectJsonLd(buildCouponJsonLd(PRODUCTS), 'coupons-jsonld');
   }).catch(function(e){

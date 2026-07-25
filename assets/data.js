@@ -33,18 +33,18 @@ const BLOG_COL  = { project:"Tên Dự Án", image:"Ảnh", content:"Nội Dung"
    thuong, co dau hay khong dau deu duoc). Neu go sai/de trong -> "Khac".
    ================================================================ */
 const CATEGORIES = [
-  { slug:"arts-entertainment",   vi:"Nghệ thuật & Giải trí", en:"Arts & Entertainment" },
-  { slug:"business",             vi:"Việc kinh doanh",       en:"Business" },
-  { slug:"clothing-accessories", vi:"Quần áo & Phụ kiện",    en:"Clothing & Accessories" },
-  { slug:"food-gifts",           vi:"Thực phẩm & Quà tặng",  en:"Food & Gifts" },
-  { slug:"health-beauty",        vi:"Sức khỏe & Sắc đẹp",    en:"Health & Beauty" },
-  { slug:"home-garden",          vi:"Nhà cửa & Vườn",        en:"Home & Garden" },
-  { slug:"life-family",          vi:"Cuộc sống & Gia đình",  en:"Life & Family" },
-  { slug:"sports-fitness",       vi:"Thể thao & Thể dục",    en:"Sports & Fitness" },
-  { slug:"tech-electronics",     vi:"Công nghệ & Điện tử",   en:"Tech & Electronics" },
-  { slug:"travel",               vi:"Du lịch",               en:"Travel" },
-  { slug:"ai-saas",              vi:"AI & SaaS",             en:"AI & SaaS" },
-  { slug:"other",                vi:"Khác",                  en:"Other" }
+  { slug:"arts-entertainment",   vi:"Nghệ thuật & Giải trí", en:"Arts & Entertainment", icon:"🎨" },
+  { slug:"business",             vi:"Việc kinh doanh",       en:"Business", icon:"💼" },
+  { slug:"clothing-accessories", vi:"Quần áo & Phụ kiện",    en:"Clothing & Accessories", icon:"👕" },
+  { slug:"food-gifts",           vi:"Thực phẩm & Quà tặng",  en:"Food & Gifts", icon:"🎁" },
+  { slug:"health-beauty",        vi:"Sức khỏe & Sắc đẹp",    en:"Health & Beauty", icon:"💄" },
+  { slug:"home-garden",          vi:"Nhà cửa & Vườn",        en:"Home & Garden", icon:"🏡" },
+  { slug:"life-family",          vi:"Cuộc sống & Gia đình",  en:"Life & Family", icon:"👨‍👩‍👧" },
+  { slug:"sports-fitness",       vi:"Thể thao & Thể dục",    en:"Sports & Fitness", icon:"⚽" },
+  { slug:"tech-electronics",     vi:"Công nghệ & Điện tử",   en:"Tech & Electronics", icon:"💻" },
+  { slug:"travel",               vi:"Du lịch",               en:"Travel", icon:"✈️" },
+  { slug:"ai-saas",              vi:"AI & SaaS",             en:"AI & SaaS", icon:"🤖" },
+  { slug:"other",                vi:"Khác",                  en:"Other", icon:"🏷️" }
 ];
 
 function normalizeVN(s){
@@ -123,7 +123,15 @@ const UI = {
     blogEmpty:"No blog posts yet.",
     blogPostNotFoundTitle:"Post not found",
     blogPostNotFoundSub:"We could not find this blog post. Browse all posts instead.",
-    backToBlog:"Back to blog"},
+    backToBlog:"Back to blog",
+    catAllIcon:"🗂️",
+    trustSecure:"Safe & secure",trustVerified:"Verified codes",trustDaily:"Updated daily",trustFree:"Free to use",
+    howTitle:"How it works",
+    howStep1Title:"Find a store or code",howStep1Sub:"Search or browse by category to find the deal you want.",
+    howStep2Title:"Click to reveal",howStep2Sub:"Get the code instantly and copy it with one click.",
+    howStep3Title:"Save at checkout",howStep3Sub:"Paste the code at your favorite store and enjoy the discount.",
+    featuredTitle:"🔥 Featured deals this week",
+    navAbout:"About",footCategories:"Categories"},
   vi:{searchPh:"Tim cua hang, san pham, ma...",
     heroTitle:"Ma giam gia moi nhat, cap nhat moi ngay",
     heroSub:"Kham pha ma giam gia va uu dai moi nhat tu cac cua hang truc tuyen yeu thich - chi can chon 1 ma va dung khi thanh toan. CouponsMarkets mang den ma khuyen mai, coupon va uu dai mua sam cho hang ngan san pham va thuong hieu.",
@@ -166,7 +174,15 @@ const UI = {
     blogEmpty:"Chua co bai blog nao.",
     blogPostNotFoundTitle:"Khong tim thay bai viet",
     blogPostNotFoundSub:"Khong tim thay bai viet nay. Xem tat ca bai viet khac.",
-    backToBlog:"Ve trang blog"}
+    backToBlog:"Ve trang blog",
+    catAllIcon:"🗂️",
+    trustSecure:"An toan bao mat",trustVerified:"Ma da kiem tra",trustDaily:"Cap nhat hang ngay",trustFree:"Mien phi su dung",
+    howTitle:"Cach su dung",
+    howStep1Title:"Tim cua hang hoac ma",howStep1Sub:"Tim kiem hoac duyet theo danh muc de tim uu dai ban muon.",
+    howStep2Title:"Bam de hien ma",howStep2Sub:"Nhan ma ngay lap tuc va sao chep chi voi 1 cu nhap.",
+    howStep3Title:"Tiet kiem khi thanh toan",howStep3Sub:"Dan ma tai cua hang yeu thich va huong uu dai.",
+    featuredTitle:"🔥 Uu dai noi bat tuan nay",
+    navAbout:"Gioi thieu",footCategories:"Danh muc"}
 };
 
 /* ================================================================
@@ -506,7 +522,14 @@ function applyFooterUI(t){
   const set=function(id,val){const el=document.getElementById(id);if(el)el.textContent=val;};
   set('footTag',t.footTag);set('footInfo',t.footInfo);set('footAbout',t.footAbout);
   set('footPrivacy',t.footPrivacy);set('footTerms',t.footTerms);set('footContact',t.footContact);
-  set('footBlog',t.navBlog);set('footNote',t.footNote);
+  set('footBlog',t.navBlog);set('footNote',t.footNote);set('footCategories',t.footCategories);
+  const catGrid=document.getElementById('footCatGrid');
+  if(catGrid){
+    catGrid.innerHTML=CATEGORIES.map(function(c){
+      const label=lang==='vi'?c.vi:c.en;
+      return '<a href="/category/'+c.slug+'">'+escapeHTML(label)+'</a>';
+    }).join('');
+  }
 }
 
 /* Structured data: mo ta cac san pham bang schema.org, khong bia dat gia/tien te
