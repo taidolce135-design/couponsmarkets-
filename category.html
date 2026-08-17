@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link rel="stylesheet" href="/assets/style.css?v=23">
 </head>
 <body>
 
@@ -48,6 +48,7 @@
 
   <div class="wrap">
     <div class="grid" id="grid"></div>
+    <div class="pagination" id="pagination"></div>
   </div>
 </main>
 
@@ -78,6 +79,7 @@
 <script>
 const grid=document.getElementById('grid');
 let query='', CATEGORY_PRODUCTS=[];
+const PER_PAGE=20; let page=1;
 
 function currentCategorySlug(){
   const parts=location.pathname.split('/').filter(Boolean);
@@ -110,8 +112,29 @@ function render(){
   const list=CATEGORY_PRODUCTS.filter(function(p){
     return !q || (p.brand+p.title).toLowerCase().includes(q);
   });
-  if(!list.length){grid.innerHTML='<div class="state">'+t.empty+'</div>';return;}
-  grid.innerHTML=list.map(function(p){return productCardHTML(p,t)}).join('');
+  if(!list.length){grid.innerHTML='<div class="state">'+t.empty+'</div>';renderPagination(0);return;}
+  const totalPages=Math.ceil(list.length/PER_PAGE);
+  if(page>totalPages)page=totalPages;
+  if(page<1)page=1;
+  const start=(page-1)*PER_PAGE;
+  grid.innerHTML=list.slice(start,start+PER_PAGE).map(function(p){return productCardHTML(p,t)}).join('');
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages){
+  const pag=document.getElementById('pagination');
+  if(!pag)return;
+  if(totalPages<=1){pag.innerHTML='';return;}
+  var html='<button class="pg-btn" data-page="'+(page-1)+'"'+(page===1?' disabled':'')+' aria-label="Prev">‹</button>';
+  for(var i=1;i<=totalPages;i++){
+    if(i===1||i===totalPages||(i>=page-1&&i<=page+1)){
+      html+='<button class="pg-btn'+(i===page?' active':'')+'" data-page="'+i+'">'+i+'</button>';
+    }else if(i===page-2||i===page+2){
+      html+='<span class="pg-gap">…</span>';
+    }
+  }
+  html+='<button class="pg-btn" data-page="'+(page+1)+'"'+(page===totalPages?' disabled':'')+' aria-label="Next">›</button>';
+  pag.innerHTML=html;
 }
 
 const t=UI[lang];
@@ -136,7 +159,7 @@ if(!catInfo){
   document.getElementById('metaCanonical').setAttribute('href',url);
 
   fetchData().then(function(data){
-    CATEGORY_PRODUCTS=groupToProducts(data.coupons).filter(function(p){return p.categories.indexOf(slug)!==-1});
+    CATEGORY_PRODUCTS=groupToProducts(data.coupons).filter(function(p){return p.categories.indexOf(slug)!==-1}).reverse();
     render();
     if(CATEGORY_PRODUCTS.length){
       injectJsonLd({
@@ -160,7 +183,13 @@ if(!catInfo){
     console.error(e);
   });
 }
-document.getElementById('searchInput').addEventListener('input',function(e){query=e.target.value;render()});
+document.getElementById('searchInput').addEventListener('input',function(e){query=e.target.value;page=1;render()});
+document.getElementById('pagination').addEventListener('click',function(e){
+  const b=e.target.closest('.pg-btn');if(!b||b.disabled)return;
+  const p=parseInt(b.dataset.page,10);if(isNaN(p))return;
+  page=p;render();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
 </script>
 </body>
 </html>

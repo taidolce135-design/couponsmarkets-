@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link rel="stylesheet" href="/assets/style.css?v=23">
 </head>
 <body>
 
@@ -88,6 +88,7 @@
       </aside>
       <div class="main-col">
         <div class="grid" id="grid"></div>
+        <div class="pagination" id="pagination"></div>
       </div>
     </div>
   </div>
@@ -121,6 +122,7 @@
 const grid=document.getElementById('grid');
 const catList=document.getElementById('catList');
 let activeCat='all', query='', PRODUCTS=[], BRANDS=[];
+const PER_PAGE=20; let page=1;
 
 function renderCatList(t){
   const items=[{slug:'all',label:t.catAllLabel,href:'/',icon:t.catAllIcon}].concat(CATEGORIES.map(function(c){return {slug:c.slug,label:lang==='vi'?c.vi:c.en,href:'/category/'+c.slug,icon:c.icon}}));
@@ -177,7 +179,7 @@ function loadData(){
   const t=UI[lang];
   grid.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
   fetchData().then(function(data){
-    PRODUCTS=groupToProducts(data.coupons); BRANDS=data.brands;
+    PRODUCTS=groupToProducts(data.coupons).reverse(); BRANDS=data.brands;
     renderMarquee(BRANDS, document.getElementById('marquee'), document.getElementById('marqueeTrack'));
     renderFeatured(t);
     render();
@@ -196,8 +198,30 @@ function render(){
     const okQ=!q||(p.brand+p.title).toLowerCase().includes(q);
     return okCat&&okQ;
   });
-  if(!list.length){grid.innerHTML='<div class="state">'+t.empty+'</div>';return;}
-  grid.innerHTML=list.map(function(p){return productCardHTML(p,t)}).join('');
+  if(!list.length){grid.innerHTML='<div class="state">'+t.empty+'</div>';renderPagination(0);return;}
+  const totalPages=Math.ceil(list.length/PER_PAGE);
+  if(page>totalPages)page=totalPages;
+  if(page<1)page=1;
+  const start=(page-1)*PER_PAGE;
+  grid.innerHTML=list.slice(start,start+PER_PAGE).map(function(p){return productCardHTML(p,t)}).join('');
+  renderPagination(totalPages);
+}
+
+/* Phan trang: 20 du an/trang. Nut trang chi hien 1, cuoi, va quanh trang hien tai. */
+function renderPagination(totalPages){
+  const pag=document.getElementById('pagination');
+  if(!pag)return;
+  if(totalPages<=1){pag.innerHTML='';return;}
+  var html='<button class="pg-btn" data-page="'+(page-1)+'"'+(page===1?' disabled':'')+' aria-label="Prev">‹</button>';
+  for(var i=1;i<=totalPages;i++){
+    if(i===1||i===totalPages||(i>=page-1&&i<=page+1)){
+      html+='<button class="pg-btn'+(i===page?' active':'')+'" data-page="'+i+'">'+i+'</button>';
+    }else if(i===page-2||i===page+2){
+      html+='<span class="pg-gap">…</span>';
+    }
+  }
+  html+='<button class="pg-btn" data-page="'+(page+1)+'"'+(page===totalPages?' disabled':'')+' aria-label="Next">›</button>';
+  pag.innerHTML=html;
 }
 
 catList.addEventListener('click',function(e){
@@ -205,9 +229,15 @@ catList.addEventListener('click',function(e){
   e.preventDefault();
   activeCat=link.dataset.cat;
   catList.querySelectorAll('a').forEach(function(a){a.classList.toggle('active',a.dataset.cat===activeCat)});
-  render();
+  page=1;render();
 });
-document.getElementById('searchInput').addEventListener('input',function(e){query=e.target.value;render()});
+document.getElementById('searchInput').addEventListener('input',function(e){query=e.target.value;page=1;render()});
+document.getElementById('pagination').addEventListener('click',function(e){
+  const b=e.target.closest('.pg-btn');if(!b||b.disabled)return;
+  const p=parseInt(b.dataset.page,10);if(isNaN(p))return;
+  page=p;render();
+  var top=document.querySelector('.layout');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});
+});
 
 applyUI();
 loadData();

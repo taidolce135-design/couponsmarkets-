@@ -185,3 +185,11 @@ footer .logo-img{background:#fff;border-radius:10px;padding:6px 10px}
 .blog-card h3{font-size:16px;margin:14px 16px 16px;color:var(--ink)}
 .blog-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:20px 0}
 .blog-gallery img{width:100%;height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+
+/* Phan trang (20 du an/trang) */
+.pagination{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin:28px 0 48px}
+.pg-btn{min-width:38px;height:38px;padding:0 10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center}
+.pg-btn:hover:not(:disabled):not(.active){border-color:var(--brand);color:var(--brand)}
+.pg-btn.active{background:var(--brand);border-color:var(--brand);color:#fff;cursor:default}
+.pg-btn:disabled{opacity:.4;cursor:not-allowed}
+.pg-gap{padding:0 4px;color:var(--muted);font-weight:700}
