@@ -16,90 +16,69 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 
-<title id="metaTitle">Blog | CouponsMarkets</title>
-<meta id="metaDesc" name="description" content="Shopping tips, deal roundups and stories from the CouponsMarkets team.">
+<title>Store Reviews & Shopping Guides | Defio Coupon Blog</title>
+<meta name="description" content="Hands-on reviews and shopping guides for the independent brands on Defio Coupon, with real prices, product photos and the best codes.">
 <meta name="robots" content="index, follow">
-<link id="metaCanonical" rel="canonical" href="https://defiocoupon.com/blog">
-<meta name="theme-color" content="#3DAF1F">
+<link rel="canonical" href="https://defiocoupon.com/blog">
+<meta name="theme-color" content="#13103A">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/defio.css?v=1">
+<style>
+.lead{display:grid;grid-template-columns:1.3fr 1fr;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;margin-top:32px}
+.lead:hover{border-color:var(--violet)}
+.lead img{width:100%;height:100%;min-height:280px;object-fit:contain;background:var(--page)}
+.lead div{padding:28px 30px;display:flex;flex-direction:column;justify-content:center}
+.lead b{font-size:13px;color:var(--violet);font-weight:600}
+.lead h2{font:600 26px/1.2 var(--sans);letter-spacing:-.03em;margin:6px 0 10px}
+.lead p{margin:0;color:var(--ink-soft);font-size:15px}
+.filter{display:flex;gap:8px;flex-wrap:wrap;margin:28px 0 16px}
+.filter input{height:40px;border:1px solid var(--line);border-radius:10px;padding:0 12px;font:500 14px var(--sans);min-width:260px;background:#fff}
+.filter input:focus{outline:none;border-color:var(--violet)}
+.skel-card{height:260px;border-radius:14px;background:linear-gradient(90deg,#EEECF6 25%,#F7F6FC 50%,#EEECF6 75%);background-size:200% 100%;animation:shimmer 1.2s linear infinite}
+@media (max-width:760px){.lead{grid-template-columns:1fr}.lead img{min-height:200px}.filter input{min-width:0;width:100%}}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="wrap hd">
-    <a href="/" class="logo"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></a>
-    <div class="search"><input type="text" id="searchInput" aria-label="Search">
-      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    </div>
-    <nav class="hd-nav"><a href="/blog" id="navBlog"></a><a href="/about" id="navAbout"></a></nav>
-  </div>
-</header>
+<div class="top">
+  <header class="wrap hd" id="siteHeader" data-active="blog"></header>
+  <section class="wrap band">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span>Blog</nav>
+    <h1>Store reviews & shopping guides</h1>
+    <p>Real prices, product photos and the best ways to save at the independent brands we list.</p>
+  </section>
+</div>
 
-<main>
-  <div class="wrap">
-    <p class="breadcrumb"><a href="/" id="breadcrumbHome"></a><span>/</span><span id="breadcrumbBlog"></span></p>
-    <section class="hero"><h1 id="blogHeroTitle"></h1><p id="blogHeroSub"></p></section>
-  </div>
-
-  <div class="wrap">
-    <div class="blog-grid" id="blogGrid"></div>
-  </div>
+<main class="wrap">
+  <a class="lead" id="lead" hidden></a>
+  <div class="filter"><label class="sr-only" for="find">Find a review</label><input type="search" id="find" placeholder="Find a review by store name"></div>
+  <div class="post-cards" id="posts"><div class="skel-card"></div><div class="skel-card"></div><div class="skel-card"></div></div>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <div><div class="logo" style="margin-bottom:8px"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></div><div id="footTag"></div></div>
-      <div>
-        <div class="foot-heading" id="footCategories"></div>
-        <div class="foot-cat-grid" id="footCatGrid"></div>
-      </div>
-      <div>
-        <div style="font-weight:700;color:var(--footer-heading);margin-bottom:8px" id="footInfo"></div>
-        <div><a href="/about" id="footAbout"></a></div>
-        <div><a href="/privacy-policy" id="footPrivacy"></a></div>
-        <div><a href="/terms-of-use" id="footTerms"></a></div>
-        <div><a href="/contact" id="footContact"></a></div>
-        <div><a href="/blog" id="footBlog"></a></div>
-      </div>
-    </div>
-    <p class="foot-note" id="footNote"></p>
-  </div>
-</footer>
+<footer class="site-foot" id="siteFooter"></footer>
 
-<script src="/assets/data.js?v=22"></script>
+<script src="/assets/data.js?v=23"></script>
+<script src="/assets/defio.js?v=1"></script>
 <script>
-const blogGrid=document.getElementById('blogGrid');
-
-function applyStaticUI(t){
-  document.documentElement.lang=lang;
-  document.getElementById('searchInput').placeholder=t.searchPh;
-  document.getElementById('navBlog').textContent=t.navBlog;
-  document.getElementById('navAbout').textContent=t.navAbout;
-  document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
-  document.getElementById('breadcrumbBlog').textContent=t.navBlog;
-  document.getElementById('blogHeroTitle').textContent=t.blogHeroTitle;
-  document.getElementById('blogHeroSub').textContent=t.blogHeroSub;
-  document.getElementById('metaTitle').textContent=t.blogPageTitle;
-  document.getElementById('metaDesc').setAttribute('content',t.blogPageMetaDesc);
-  applyFooterUI(t);
+var ALL=[], q='';
+function render(){
+  var list=ALL.filter(function(p){return p.images.length||p.content}).slice().reverse();
+  var lead=list[0];
+  var leadEl=document.getElementById('lead');
+  if(lead&&!q){
+    var h=postHeadline(lead);
+    leadEl.href='/blog/'+encodeURIComponent(lead.slug);
+    leadEl.innerHTML=(lead.images[0]?'<img src="'+escapeHTML(sized(lead.images[0]))+'" alt="">':'')+'<div><b>Latest review · '+escapeHTML(lead.title)+'</b><h2>'+escapeHTML(h.title)+'</h2>'+(h.desc?'<p>'+escapeHTML(h.desc)+'</p>':'')+'</div>';
+    leadEl.hidden=false; list=list.slice(1);
+  }else leadEl.hidden=true;
+  if(q)list=ALL.filter(function(p){return (p.title+' '+p.content.slice(0,200)).toLowerCase().indexOf(q)!==-1});
+  document.getElementById('posts').innerHTML=list.length?list.map(postCardHTML).join(''):'<div class="state" style="grid-column:1/-1">No review matches "'+escapeHTML(q)+'".</div>';
 }
-
-const t=UI[lang];
-applyStaticUI(t);
-blogGrid.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
-
-fetchBlogPosts().then(function(posts){
-  if(!posts.length){blogGrid.innerHTML='<div class="state">'+t.blogEmpty+'</div>';return;}
-  blogGrid.innerHTML=posts.map(function(p){return blogCardHTML(p,t)}).join('');
-}).catch(function(e){
-  blogGrid.innerHTML='<div class="state">'+t.err+'</div>';
-  console.error(e);
-});
+document.getElementById('find').addEventListener('input',function(e){q=e.target.value.trim().toLowerCase();render()});
+loadBlog(function(posts){ALL=posts;render();});
 </script>
 </body>
 </html>

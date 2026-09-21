@@ -17,110 +17,321 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 
 <!-- Cac the SEO duoi day duoc JS ghi de theo tung bai blog sau khi tai du lieu -->
-<title id="metaTitle">Blog | CouponsMarkets</title>
-<meta id="metaDesc" name="description" content="">
+<title id="metaTitle">Blog | Defio Coupon</title>
+<meta id="metaDesc" name="description" content="Shopping guides and reviews from Defio Coupon.">
 <meta name="robots" content="index, follow">
 <link id="metaCanonical" rel="canonical" href="https://defiocoupon.com/blog">
-<meta name="theme-color" content="#3DAF1F">
+<meta property="og:type" content="article">
+<meta id="ogTitle" property="og:title" content="Blog | Defio Coupon">
+<meta id="ogDesc" property="og:description" content="">
+<meta id="ogImage" property="og:image" content="https://defiocoupon.com/assets/img/logo.png">
+<meta name="theme-color" content="#13103A">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#13103A;
+  --violet:#6246EA;
+  --violet-deep:#4E34D1;
+  --violet-soft:#EFECFF;
+  --glow:#8B7BFF;
+  --page:#F6F5FB;
+  --ink:#1A1733;
+  --ink-soft:#615D7E;
+  --line:#E6E3F2;
+  --mint:#14B88F;
+  --sans:"Geist",system-ui,sans-serif;
+  --serif:"Newsreader",Georgia,serif;
+  --mono:"Geist Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* header */
+.top{background:var(--night);color:#fff}
+.hd{display:flex;align-items:center;gap:28px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font:700 19px/1 var(--sans);letter-spacing:-.02em;flex-shrink:0}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--glow),var(--violet));display:grid;place-items:center}
+.brand-mark svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2}
+.brand span{color:rgba(255,255,255,.55);font-weight:500}
+.nav{display:flex;gap:24px;font-size:14px;color:rgba(255,255,255,.72)}
+.nav a:hover,.nav a[aria-current="page"]{color:#fff}
+.hd-search{margin-left:auto;position:relative;width:280px}
+.hd-search input{width:100%;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;padding:0 12px 0 36px;font:500 14px var(--sans)}
+.hd-search input::placeholder{color:rgba(255,255,255,.5)}
+.hd-search input:focus{outline:none;background:#fff;color:var(--ink);border-color:#fff}
+.hd-search svg{position:absolute;left:11px;top:11px;width:16px;height:16px;stroke:rgba(255,255,255,.6);fill:none;stroke-width:2}
+
+/* article */
+article{max-width:740px;margin:0 auto;padding:36px 24px 40px}
+.crumbs{font-size:14px;color:var(--ink-soft);margin-bottom:18px}
+.crumbs a:hover{color:var(--violet)}
+.crumbs span{margin:0 6px;color:#C4BFDB}
+h1{font:600 clamp(30px,4.4vw,44px)/1.1 var(--sans);letter-spacing:-.035em;margin:0 0 14px}
+.dek{font:400 20px/1.5 var(--serif);color:var(--ink-soft);margin:0 0 22px}
+.byline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:14px;color:var(--ink-soft);padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.byline b{color:var(--ink);font-weight:600}
+.hero-img{width:100%;margin:0 0 28px;border-radius:18px;background:var(--page);aspect-ratio:16/10;object-fit:contain}
+
+.deal{display:flex;align-items:center;gap:16px;background:var(--violet-soft);border-radius:14px;padding:16px 18px;margin:0 0 32px}
+.deal-logo{width:48px;height:48px;border-radius:11px;background:#fff;object-fit:contain;padding:4px;flex-shrink:0}
+.deal-disc{font:700 26px/1 var(--sans);color:var(--violet);letter-spacing:-.03em;white-space:nowrap}
+.deal-disc small{display:block;font:500 12px var(--sans);color:var(--ink-soft);letter-spacing:0;margin-top:3px}
+.deal p{margin:0;font-size:15px;min-width:0}
+.deal p b{display:block;font-weight:600}
+.deal code{font:600 13px var(--mono);background:#fff;border:1px dashed #B9B0EE;border-radius:6px;padding:1px 7px;letter-spacing:.05em}
+.deal .go{margin-left:auto;background:var(--violet);color:#fff;font-weight:600;font-size:14px;padding:11px 18px;border-radius:10px;white-space:nowrap}
+.deal .go:hover{background:var(--violet-deep)}
+
+.body h2{font:600 25px/1.25 var(--sans);letter-spacing:-.02em;margin:42px 0 12px}
+.body p{font:400 19px/1.72 var(--serif);margin:0 0 18px}
+.body ul{margin:0 0 22px;padding:0;list-style:none}
+.body li{font:400 18px/1.65 var(--serif);padding:12px 0 12px 22px;border-top:1px solid var(--line);position:relative}
+.body li:last-child{border-bottom:1px solid var(--line)}
+.body li::before{content:"";position:absolute;left:0;top:24px;width:7px;height:7px;border-radius:2px;background:var(--violet)}
+.body li strong{font:600 16px var(--sans)}
+.body figure{margin:30px 0;background:var(--page);border-radius:16px;overflow:hidden}
+.body figure img{width:100%;aspect-ratio:4/3;object-fit:contain}
+
+.gallery-title{font:600 16px var(--sans);margin:44px 0 12px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.gallery button{padding:0;border:1px solid var(--line);border-radius:12px;background:var(--page);cursor:zoom-in;overflow:hidden}
+.gallery img{width:100%;aspect-ratio:1;object-fit:contain}
+.note{margin:26px 0 0;font-size:13px;color:var(--ink-soft)}
+
+.more{max-width:1100px;margin:0 auto;padding:0 24px 20px}
+.more h2{font:600 22px var(--sans);letter-spacing:-.02em;margin:0 0 14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.card:hover{border-color:var(--violet)}
+.card img{width:100%;aspect-ratio:16/10;object-fit:contain;background:var(--page)}
+.card div{padding:12px 14px 14px}
+.card b{display:block;font-size:13px;color:var(--violet);font-weight:600}
+.card span{display:block;font-weight:600;font-size:15px;line-height:1.35;margin-top:3px}
+
+.state{padding:80px 0;text-align:center;color:var(--ink-soft)}
+.skel{height:14px;border-radius:7px;background:linear-gradient(90deg,#EEECF6 25%,#F7F6FC 50%,#EEECF6 75%);background-size:200% 100%;animation:sh 1.2s linear infinite;margin-bottom:12px}
+@keyframes sh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.skel{animation:none}}
+
+.lightbox{position:fixed;inset:0;background:rgba(10,8,30,.85);display:none;align-items:center;justify-content:center;padding:24px;z-index:50;cursor:zoom-out}
+.lightbox.open{display:flex}
+.lightbox img{max-height:90vh;border-radius:12px;background:#fff}
+
+footer{margin-top:60px;background:var(--night);color:rgba(255,255,255,.62);padding:48px 0 28px;font-size:14px}
+.foot{display:grid;grid-template-columns:1.3fr 2fr 1fr;gap:40px}
+footer .brand{color:#fff;margin-bottom:14px}
+footer h4{font:600 14px var(--sans);color:#fff;margin:0 0 12px}
+.foot-cats{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px}
+.foot-links{display:flex;flex-direction:column;gap:6px}
+footer a:hover{color:#fff}
+.foot-note{border-top:1px solid rgba(255,255,255,.1);margin-top:32px;padding-top:18px;font-size:13px;max-width:80ch}
+
+@media (max-width:860px){.nav{display:none}.hd-search{width:auto;flex:1}.foot{grid-template-columns:1fr}}
+@media (max-width:560px){
+  .wrap,article,.more{padding-left:16px;padding-right:16px}
+  .hd{gap:14px}
+  .brand>span:last-child{display:none}
+  .deal{flex-wrap:wrap}
+  .deal .go{margin-left:0;width:100%;text-align:center}
+  .body p{font-size:18px}
+}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="wrap hd">
-    <a href="/" class="logo"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></a>
-    <div class="search"><input type="text" id="searchInput" aria-label="Search">
-      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    </div>
-    <nav class="hd-nav"><a href="/blog" id="navBlog"></a><a href="/about" id="navAbout"></a></nav>
-  </div>
-</header>
+<div class="top">
+  <header class="wrap hd">
+    <a href="/" class="brand" aria-label="Defio Coupon home">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12 12 20l-8-8V4h8z"/><circle cx="8.5" cy="8.5" r="1.3" fill="#fff"/></svg></span>
+      Defio<span>Coupon</span>
+    </a>
+    <nav class="nav"><a href="/">Codes</a><a href="/#stores">Stores A–Z</a><a href="/blog" aria-current="page">Blog</a><a href="/about">About</a></nav>
+    <form class="hd-search" action="/" role="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input type="search" name="q" placeholder="Search stores and codes" aria-label="Search stores and codes">
+    </form>
+  </header>
+</div>
 
 <main>
-  <div class="wrap">
-    <p class="breadcrumb">
-      <a href="/" id="breadcrumbHome"></a><span>/</span>
-      <a href="/blog" id="breadcrumbBlog"></a><span>/</span>
-      <span id="breadcrumbPost"></span>
-    </p>
-    <div class="page-content" id="postContent"></div>
-  </div>
+  <article id="post" aria-busy="true">
+    <div class="skel" style="width:30%"></div>
+    <div class="skel" style="height:34px;width:90%;margin-top:24px"></div>
+    <div class="skel" style="height:34px;width:70%"></div>
+    <div class="skel" style="width:100%;margin-top:24px"></div>
+    <div class="skel" style="width:80%"></div>
+  </article>
+  <section class="more" id="more" hidden>
+    <h2>More reviews</h2>
+    <div class="cards" id="moreCards"></div>
+  </section>
 </main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Image preview"><img alt=""></div>
 
 <footer>
   <div class="wrap">
     <div class="foot">
-      <div><div class="logo" style="margin-bottom:8px"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></div><div id="footTag"></div></div>
-      <div>
-        <div class="foot-heading" id="footCategories"></div>
-        <div class="foot-cat-grid" id="footCatGrid"></div>
-      </div>
-      <div>
-        <div style="font-weight:700;color:var(--footer-heading);margin-bottom:8px" id="footInfo"></div>
-        <div><a href="/about" id="footAbout"></a></div>
-        <div><a href="/privacy-policy" id="footPrivacy"></a></div>
-        <div><a href="/terms-of-use" id="footTerms"></a></div>
-        <div><a href="/contact" id="footContact"></a></div>
-        <div><a href="/blog" id="footBlog"></a></div>
-      </div>
+      <div><div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12 12 20l-8-8V4h8z"/><circle cx="8.5" cy="8.5" r="1.3" fill="#fff"/></svg></span>Defio<span>Coupon</span></div><p style="margin:0;max-width:32ch">Verified promo codes for independent brands, updated as stores send them in.</p></div>
+      <div><h4>Categories</h4><div class="foot-cats" id="footCats"></div></div>
+      <div><h4>Company</h4><div class="foot-links"><a href="/about">About us</a><a href="/contact">Contact</a><a href="/blog">Blog</a><a href="/privacy-policy">Privacy policy</a><a href="/terms-of-use">Terms of use</a></div></div>
     </div>
-    <p class="foot-note" id="footNote"></p>
+    <p class="foot-note">We may earn a commission when you use a code or link to buy something. Check each code on the store's checkout page before you pay. © 2026 Defio Coupon.</p>
   </div>
 </footer>
 
-<script src="/assets/data.js?v=22"></script>
+<script src="/assets/data.js?v=23"></script>
 <script>
-const postContent=document.getElementById('postContent');
+var postEl=document.getElementById('post');
+document.getElementById('footCats').innerHTML=CATEGORIES.map(function(c){return '<a href="/category/'+c.slug+'">'+escapeHTML(c.en)+'</a>'}).join('');
 
 function currentPostSlug(){
-  const parts=location.pathname.split('/').filter(Boolean);
-  const i=parts.indexOf('blog');
+  var parts=location.pathname.split('/').filter(Boolean);
+  var i=parts.indexOf('blog');
   if(i!==-1 && parts[i+1]) return decodeURIComponent(parts[i+1]).toLowerCase();
-  const p=new URLSearchParams(location.search);
-  if(p.has('slug')) return p.get('slug').toLowerCase();
-  return '';
+  var p=new URLSearchParams(location.search);
+  return p.has('slug') ? p.get('slug').toLowerCase() : '';
+}
+function norm(s){return (s||'').toLowerCase().replace(/[^a-z0-9]/g,'')}
+/* Anh Shopify: xin ban 1200px cho nhe (anh goc co file vai MB) */
+function sized(u){
+  if(!/cdn\.shopify\.com|\/cdn\/shop\//.test(u)||/[?&]width=/.test(u)) return u;
+  return u+(u.indexOf('?')===-1?'?':'&')+'width=1200';
 }
 
-function applyStaticUI(t){
-  document.documentElement.lang=lang;
-  document.getElementById('searchInput').placeholder=t.searchPh;
-  document.getElementById('navBlog').textContent=t.navBlog;
-  document.getElementById('navAbout').textContent=t.navAbout;
-  document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
-  document.getElementById('breadcrumbBlog').textContent=t.navBlog;
-  applyFooterUI(t);
+/* Dinh dang noi dung bai trong Sheet:
+   dong 1 = tieu de SEO, "Meta description: ..." = mo ta (khong in ra bai),
+   "## " = tieu de muc. Bai cu khong co "## ": dong ngan khong co dau cau cuoi
+   duoc coi la tieu de muc. Dong ngay sau cau ket thuc bang ":" = danh sach,
+   keo dai toi tieu de muc ke tiep. */
+function parsePost(raw, fallbackTitle){
+  var lines=(raw||'').split(/\r?\n/).map(function(l){return l.trim()}).filter(Boolean);
+  var title=fallbackTitle, meta='';
+  if(lines.length && !/^meta description:/i.test(lines[0]) && lines[0].length<160 && !/^## /.test(lines[0])) title=lines.shift();
+  if(lines.length && /^meta description:/i.test(lines[0])) meta=lines.shift().replace(/^meta description:\s*/i,'');
+  var hasMarks=lines.some(function(l){return l.indexOf('## ')===0});
+  var blocks=[], inList=false;
+  lines.forEach(function(l,i){
+    var isHead=hasMarks ? l.indexOf('## ')===0 : (l.length<70 && !/[.!:,]$/.test(l) && !/^[-•*]/.test(l) && i>0);
+    if(isHead){inList=false;blocks.push({t:'h2',s:l.replace(/^##\s*/,'')});return;}
+    var prev=lines[i-1]||'';
+    /* bai cu: muc danh sach phai co dang "Ten: ..." hoac "Ten — ..." */
+    var keepList=inList&&l.length<420&&(hasMarks||/^.{2,70}?(:\s| — | – | - )/.test(l));
+    if(/:$/.test(prev)||keepList){inList=true;blocks.push({t:'li',s:l.replace(/^[-•*]\s*/,'')});return;}
+    inList=false;blocks.push({t:'p',s:l});
+  });
+  if(!meta){var fp=blocks.find(function(b){return b.t==='p'});meta=fp?fp.s.slice(0,158):''}
+  return {title:title,meta:meta,blocks:blocks};
+}
+function bodyHTML(blocks, imgs){
+  var html='', open=false, h2=0, next=1;
+  blocks.forEach(function(b){
+    if(b.t!=='li'&&open){html+='</ul>';open=false}
+    if(b.t==='h2'){
+      if(h2>0&&h2%2===0&&imgs[next]){html+='<figure><img src="'+escapeHTML(sized(imgs[next]))+'" alt="" loading="lazy"></figure>';next++}
+      h2++;html+='<h2>'+escapeHTML(b.s)+'</h2>';
+    }else if(b.t==='li'){
+      if(!open){html+='<ul>';open=true}
+      var m=b.s.match(/^([^:]{2,70}):\s(.*)$/);
+      html+='<li>'+(m?'<strong>'+escapeHTML(m[1])+':</strong> '+escapeHTML(m[2]):escapeHTML(b.s))+'</li>';
+    }else html+='<p>'+escapeHTML(b.s)+'</p>';
+  });
+  if(open)html+='</ul>';
+  return html;
+}
+function setMeta(title, desc, img, slug){
+  document.getElementById('metaTitle').textContent=title+' | Defio Coupon';
+  document.getElementById('ogTitle').setAttribute('content',title);
+  document.getElementById('metaDesc').setAttribute('content',desc);
+  document.getElementById('ogDesc').setAttribute('content',desc);
+  if(img)document.getElementById('ogImage').setAttribute('content',sized(img));
+  document.getElementById('metaCanonical').setAttribute('href',location.origin+'/blog/'+slug);
 }
 
-function renderNotFound(t){
-  document.getElementById('breadcrumbPost').textContent='';
-  postContent.innerHTML='<h1>'+escapeHTML(t.blogPostNotFoundTitle)+'</h1><p>'+escapeHTML(t.blogPostNotFoundSub)+' <a href="/blog" style="color:var(--brand);font-weight:700">'+escapeHTML(t.backToBlog)+'</a></p>';
+function renderPost(post, posts){
+  var d=parsePost(post.content, post.title);
+  setMeta(d.title, d.meta, post.images[0], post.slug);
+  injectJsonLd({"@context":"https://schema.org","@type":"BlogPosting","headline":d.title,"description":d.meta,
+    "image":post.images.slice(0,3).map(sized),"author":{"@type":"Organization","name":"Defio Coupon"},
+    "publisher":{"@type":"Organization","name":"Defio Coupon"},"mainEntityOfPage":location.origin+'/blog/'+post.slug},'post-jsonld');
+  postEl.removeAttribute('aria-busy');
+  postEl.innerHTML=
+    '<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/blog">Blog</a><span>/</span>'+escapeHTML(post.title)+'</nav>'
+    +'<h1>'+escapeHTML(d.title)+'</h1>'
+    +(d.meta?'<p class="dek">'+escapeHTML(d.meta)+'</p>':'')
+    +'<div class="byline"><b>Defio Coupon</b><span>'+escapeHTML(post.title)+' review</span></div>'
+    +(post.images[0]?'<img class="hero-img" src="'+escapeHTML(sized(post.images[0]))+'" alt="'+escapeHTML(post.title)+'">':'')
+    +'<div id="dealSlot"></div>'
+    +'<div class="body">'+bodyHTML(d.blocks, post.images)+'</div>'
+    +(post.images.length>1?'<h2 class="gallery-title">Photos from '+escapeHTML(post.title)+'</h2><div class="gallery">'+post.images.map(function(u){return '<button type="button" data-src="'+escapeHTML(sized(u))+'" aria-label="View larger image"><img src="'+escapeHTML(sized(u))+'" alt="" loading="lazy"></button>'}).join('')+'</div>':'')
+    +'<p class="note">Product images: '+escapeHTML(post.title)+' official store. We may earn a commission when you buy through our links.</p>';
+
+  var others=posts.filter(function(p){return p.slug!==post.slug&&p.images.length}).slice(0,6);
+  if(others.length){
+    document.getElementById('moreCards').innerHTML=others.map(function(p){
+      var t=parsePost(p.content,p.title).title;
+      return '<a class="card" href="/blog/'+encodeURIComponent(p.slug)+'"><img src="'+escapeHTML(sized(p.images[0]))+'" alt="" loading="lazy"><div><b>'+escapeHTML(p.title)+'</b><span>'+escapeHTML(t)+'</span></div></a>';
+    }).join('');
+    document.getElementById('more').hidden=false;
+  }
 }
 
-function renderPost(post, t){
-  document.getElementById('breadcrumbPost').textContent=post.title;
-  document.getElementById('metaTitle').textContent=post.title+' | CouponsMarkets Blog';
-  document.getElementById('metaDesc').setAttribute('content', post.content.slice(0,160));
-  document.getElementById('metaCanonical').setAttribute('href', location.origin+'/blog/'+post.slug);
-  postContent.innerHTML='<h1>'+escapeHTML(post.title)+'</h1>'+blogGalleryHTML(post.images)+renderPageContent(post.content);
+/* Hop coupon: tim san pham cung ten brand voi bai blog */
+function renderDeal(post, coupons){
+  var slot=document.getElementById('dealSlot'); if(!slot)return;
+  var products=groupToProducts(coupons).filter(function(p){return norm(p.brand)===norm(post.title)});
+  if(!products.length){slot.innerHTML='';return;}
+  var p=products[0], offer=p.offers.find(function(o){return o.code})||p.offers[0];
+  var disc=offer.discount||'Deal';
+  var logo=p.logo?'<img class="deal-logo" src="'+escapeHTML(p.logo)+'" alt="" onerror="this.remove()">':'';
+  slot.innerHTML='<div class="deal">'+logo
+    +'<span class="deal-disc">'+escapeHTML(disc.charAt(0)+disc.slice(1).toLowerCase())+'<small>'+(offer.code?'with code':'deal')+'</small></span>'
+    +'<p><b>'+escapeHTML(p.title)+'</b>'+(offer.code?'Use code <code>'+escapeHTML(offer.code)+'</code> at checkout.':'No code needed.')+'</p>'
+    +'<a class="go" href="/coupons/'+encodeURIComponent(p.slug)+'">'+(offer.code?'Get code':'See deal')+'</a></div>';
 }
 
-const t=UI[lang];
-applyStaticUI(t);
-const slug=currentPostSlug();
-postContent.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
+function renderNotFound(){
+  postEl.removeAttribute('aria-busy');
+  postEl.innerHTML='<div class="state"><h1 style="font-size:28px">Post not found</h1><p>This review may have moved. <a href="/blog" style="color:var(--violet);font-weight:600">Browse all reviews</a></p></div>';
+}
+
+/* opensheet co the cham 5-15s: hien ban luu san truoc, roi cap nhat */
+function cached(key){try{return JSON.parse(localStorage.getItem(key))}catch(e){return null}}
+function store(key,val){try{localStorage.setItem(key,JSON.stringify(val))}catch(e){}}
+
+var slug=currentPostSlug(), shown=false;
+function showPosts(posts){
+  var post=posts.find(function(p){return p.slug===slug});
+  if(!slug||!post){if(!shown)renderNotFound();return false;}
+  renderPost(post, posts); shown=true; return post;
+}
+var cPosts=cached('defio_blog_v1'), cData=cached('defio_data_v1'), current=null;
+if(cPosts&&cPosts.length){current=showPosts(cPosts); if(current&&cData&&cData.coupons)renderDeal(current,cData.coupons);}
 
 fetchBlogPosts().then(function(posts){
-  const post=posts.find(function(p){return p.slug===slug});
-  if(!slug || !post){renderNotFound(t);return;}
-  renderPost(post, t);
+  if(!posts.length&&shown)return;
+  store('defio_blog_v1',posts);
+  current=showPosts(posts);
+  var d=cached('defio_data_v1'); if(current&&d&&d.coupons)renderDeal(current,d.coupons);
+  return fetchData().then(function(data){store('defio_data_v1',data); if(current)renderDeal(current,data.coupons);});
 }).catch(function(e){
-  postContent.innerHTML='<div class="state">'+t.err+'</div>';
   console.error(e);
+  if(!shown)postEl.innerHTML='<div class="state">This review could not load. Refresh the page to try again.</div>';
 });
+
+document.addEventListener('click',function(e){
+  var b=e.target.closest('.gallery button'), lb=document.getElementById('lightbox');
+  if(b){lb.querySelector('img').src=b.dataset.src;lb.classList.add('open');return;}
+  if(e.target.closest('#lightbox'))lb.classList.remove('open');
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open')});
 </script>
 </body>
 </html>

@@ -16,96 +16,60 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 
-<title id="metaTitle">CouponsMarkets</title>
+<title id="metaTitle">Defio Coupon</title>
 <meta id="metaDesc" name="description" content="">
 <meta name="robots" content="index, follow">
 <link id="metaCanonical" rel="canonical" href="https://defiocoupon.com/">
+<meta name="theme-color" content="#13103A">
 
-<meta name="theme-color" content="#3DAF1F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=21">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/defio.css?v=1">
 </head>
 <body>
 
-<header>
-  <div class="wrap hd">
-    <a href="/" class="logo"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></a>
-    <div class="search"><input type="text" id="searchInput" aria-label="Search">
-      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    </div>
-    <nav class="hd-nav"><a href="/blog" id="navBlog"></a><a href="/about" id="navAbout"></a></nav>
-  </div>
-</header>
+<div class="top">
+  <header class="wrap hd" id="siteHeader"></header>
+  <section class="wrap band">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span id="crumbPage"></span></nav>
+    <h1 id="pageTitle">Loading…</h1>
+  </section>
+</div>
 
-<main>
-  <div class="wrap">
-    <p class="breadcrumb"><a href="/" id="breadcrumbHome"></a><span>/</span><span id="breadcrumbPage"></span></p>
-    <div class="page-content" id="pageContent"></div>
-  </div>
+<main class="wrap">
+  <article class="prose" id="pageContent"></article>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <div><div class="logo" style="margin-bottom:8px"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></div><div id="footTag"></div></div>
-      <div>
-        <div class="foot-heading" id="footCategories"></div>
-        <div class="foot-cat-grid" id="footCatGrid"></div>
-      </div>
-      <div>
-        <div style="font-weight:700;color:var(--footer-heading);margin-bottom:8px" id="footInfo"></div>
-        <div><a href="/about" id="footAbout"></a></div>
-        <div><a href="/privacy-policy" id="footPrivacy"></a></div>
-        <div><a href="/terms-of-use" id="footTerms"></a></div>
-        <div><a href="/contact" id="footContact"></a></div>
-        <div><a href="/blog" id="footBlog"></a></div>
-      </div>
-    </div>
-    <p class="foot-note" id="footNote"></p>
-  </div>
-</footer>
+<footer class="site-foot" id="siteFooter"></footer>
 
-<script src="/assets/data.js?v=22"></script>
+<script src="/assets/data.js?v=23"></script>
+<script src="/assets/defio.js?v=1"></script>
 <script>
 function currentPageSlug(){
-  const path=location.pathname.replace(/^\/|\/$/g,'');
-  if(path) return path.toLowerCase();
-  const p=new URLSearchParams(location.search);
-  return (p.get('slug')||'').toLowerCase();
+  var path=location.pathname.replace(/^\/|\/$/g,'').replace(/\.html$/,'');
+  if(path&&path!=='page') return path.toLowerCase();
+  return (new URLSearchParams(location.search).get('slug')||'').toLowerCase();
 }
+var slug=currentPageSlug(), el=document.getElementById('pageContent');
+if(slug==='about'){document.getElementById('siteHeader').dataset.active='about';renderSiteHeader();}
 
-function applyStaticUI(t){
-  document.documentElement.lang=lang;
-  document.getElementById('searchInput').placeholder=t.searchPh;
-  document.getElementById('navBlog').textContent=t.navBlog;
-  document.getElementById('navAbout').textContent=t.navAbout;
-  document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
-  applyFooterUI(t);
-}
-
-const t=UI[lang];
-applyStaticUI(t);
-const slug=currentPageSlug();
-const pageContent=document.getElementById('pageContent');
-pageContent.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
-
-fetchPage(slug).then(function(page){
+function show(page){
   if(!page){
-    document.getElementById('breadcrumbPage').textContent='';
-    pageContent.innerHTML='<h1>'+t.pageNotFoundTitle+'</h1><p>'+t.pageNotFoundSub+' <a href="/" style="color:var(--brand);font-weight:700">'+t.backHome+'</a></p>';
+    document.getElementById('pageTitle').textContent='Page not found';
+    el.innerHTML='<p>We could not find this page. <a href="/" style="color:var(--violet);font-weight:600">Back to the homepage</a></p>';
     return;
   }
-  document.getElementById('metaTitle').textContent=page.title+' | CouponsMarkets';
-  document.getElementById('metaDesc').setAttribute('content', page.metaDesc||'');
-  document.getElementById('metaCanonical').setAttribute('href', location.origin+'/'+slug);
-  document.getElementById('breadcrumbPage').textContent=page.title;
-  pageContent.innerHTML='<h1>'+escapeHTML(page.title)+'</h1>'+renderPageContent(page.content);
-}).catch(function(e){
-  pageContent.innerHTML='<div class="state">'+t.err+'</div>';
-  console.error(e);
-});
+  document.getElementById('metaTitle').textContent=page.title+' | Defio Coupon';
+  document.getElementById('metaDesc').setAttribute('content',page.metaDesc||'');
+  document.getElementById('metaCanonical').setAttribute('href',location.origin+'/'+slug);
+  document.getElementById('crumbPage').textContent=page.title;
+  document.getElementById('pageTitle').textContent=page.title;
+  el.innerHTML=renderPageContent(page.content);
+}
+/* Hien noi dung mac dinh ngay, roi thay bang noi dung tu Sheet neu co */
+if(FALLBACK_PAGES[slug])show(FALLBACK_PAGES[slug]);
+fetchPage(slug).then(show).catch(function(e){console.error(e);if(!FALLBACK_PAGES[slug])show(null);});
 </script>
 </body>
 </html>

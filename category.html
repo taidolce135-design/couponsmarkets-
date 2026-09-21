@@ -16,180 +16,101 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 
-<!-- Cac the SEO duoi day duoc JS ghi de theo tung danh muc sau khi tai du lieu -->
-<title id="metaTitle">Category Coupons & Promo Codes 2026</title>
+<!-- Cac the SEO duoi day duoc JS ghi de theo tung danh muc -->
+<title id="metaTitle">Coupons & Promo Codes | Defio Coupon</title>
 <meta id="metaDesc" name="description" content="Verified coupons and promo codes, updated regularly.">
 <meta name="robots" content="index, follow">
 <link id="metaCanonical" rel="canonical" href="https://defiocoupon.com/">
-<meta name="theme-color" content="#3DAF1F">
+<meta name="theme-color" content="#13103A">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=23">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/defio.css?v=1">
+<style>
+.cat-title{display:flex;align-items:center;gap:14px}
+.cat-title .ic{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.1);display:grid;place-items:center;flex-shrink:0}
+.cat-title .ic svg.i{width:26px;height:26px;color:#fff}
+.cat-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:28px 0 0}
+.cat-chips a{flex-shrink:0;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:500;font-size:14px}
+.cat-chips a:hover{border-color:var(--violet)}
+.cat-chips a[aria-current="page"]{background:var(--violet-soft);border-color:var(--violet);color:var(--violet-deep)}
+.cat-chips svg.i{width:16px;height:16px;color:var(--ink-soft)}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="wrap hd">
-    <a href="/" class="logo"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></a>
-    <div class="search"><input type="text" id="searchInput" aria-label="Search">
-      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+<div class="top">
+  <header class="wrap hd" id="siteHeader"></header>
+  <section class="wrap band">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span id="crumbCat">Category</span></nav>
+    <div class="cat-title"><span class="ic" id="catIcon"></span><div><h1 id="catTitle">Coupons & promo codes</h1><p id="catSub"></p></div></div>
+  </section>
+</div>
+
+<main class="wrap">
+  <nav class="cat-chips" id="catChips" aria-label="Other categories"></nav>
+  <section class="section" style="margin-top:22px">
+    <div class="section-head"><div><h2 id="listTitle">All offers</h2><p id="listCount"></p></div></div>
+    <div class="table">
+      <div class="thead" aria-hidden="true"><span>Store and offer</span><span>Discount</span><span></span></div>
+      <div id="rows" aria-busy="true"></div>
     </div>
-    <nav class="hd-nav"><a href="/blog" id="navBlog"></a><a href="/about" id="navAbout"></a></nav>
-  </div>
-</header>
-
-<main>
-  <div class="wrap">
-    <p class="breadcrumb"><a href="/" id="breadcrumbHome"></a><span>/</span><span id="breadcrumbCategory"></span></p>
-    <section class="hero"><h1 id="categoryTitle"></h1><p id="categorySub"></p></section>
-  </div>
-
-  <div class="wrap">
-    <div class="grid" id="grid"></div>
-    <div class="pagination" id="pagination"></div>
-  </div>
+    <button class="more" id="more" hidden>Show more codes</button>
+  </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <div><div class="logo" style="margin-bottom:8px"><img src="/assets/img/logo.png?v=1" alt="CouponsMarkets" class="logo-img"></div><div id="footTag"></div></div>
-      <div>
-        <div class="foot-heading" id="footCategories"></div>
-        <div class="foot-cat-grid" id="footCatGrid"></div>
-      </div>
-      <div>
-        <div style="font-weight:700;color:var(--footer-heading);margin-bottom:8px" id="footInfo"></div>
-        <div><a href="/about" id="footAbout"></a></div>
-        <div><a href="/privacy-policy" id="footPrivacy"></a></div>
-        <div><a href="/terms-of-use" id="footTerms"></a></div>
-        <div><a href="/contact" id="footContact"></a></div>
-        <div><a href="/blog" id="footBlog"></a></div>
-      </div>
-    </div>
-    <p class="foot-note" id="footNote"></p>
-  </div>
-</footer>
+<footer class="site-foot" id="siteFooter"></footer>
 
-<div class="toast" id="toast"></div>
-
-<script src="/assets/data.js?v=22"></script>
+<script src="/assets/data.js?v=23"></script>
+<script src="/assets/defio.js?v=1"></script>
 <script>
-const grid=document.getElementById('grid');
-let query='', CATEGORY_PRODUCTS=[];
-const PER_PAGE=20; let page=1;
-
+var STEP=20, shown=STEP, LIST=[];
 function currentCategorySlug(){
-  const parts=location.pathname.split('/').filter(Boolean);
-  const i=parts.indexOf('category');
+  var parts=location.pathname.split('/').filter(Boolean);
+  var i=parts.indexOf('category');
   if(i!==-1 && parts[i+1]) return decodeURIComponent(parts[i+1]).toLowerCase();
-  const p=new URLSearchParams(location.search);
-  if(p.has('slug')) return p.get('slug').toLowerCase();
-  return '';
+  var p=new URLSearchParams(location.search);
+  return p.has('slug') ? p.get('slug').toLowerCase() : '';
 }
-
-function applyStaticUI(t){
-  document.documentElement.lang=lang;
-  document.getElementById('searchInput').placeholder=t.searchPh;
-  document.getElementById('navBlog').textContent=t.navBlog;
-  document.getElementById('navAbout').textContent=t.navAbout;
-  document.getElementById('breadcrumbHome').textContent=t.breadcrumbHome;
-  applyFooterUI(t);
-}
-
-function renderNotFound(t){
-  document.getElementById('breadcrumbCategory').textContent='';
-  document.getElementById('categoryTitle').textContent=t.categoryNotFoundTitle;
-  document.getElementById('categorySub').innerHTML=escapeHTML(t.categoryNotFoundSub)+' <a href="/" style="color:var(--brand);font-weight:700">'+escapeHTML(t.backHome)+'</a>';
-  grid.innerHTML='';
-}
+var slug=currentCategorySlug(), cat=CATEGORIES.find(function(c){return c.slug===slug});
+document.getElementById('rows').innerHTML=skeletonRows(5);
+document.getElementById('catChips').innerHTML=CATEGORIES.map(function(c){return '<a href="/category/'+c.slug+'"'+(c.slug===slug?' aria-current="page"':'')+'>'+icon(c.slug)+escapeHTML(c.en)+'</a>'}).join('');
 
 function render(){
-  const t=UI[lang];
-  const q=query.toLowerCase();
-  const list=CATEGORY_PRODUCTS.filter(function(p){
-    return !q || (p.brand+p.title).toLowerCase().includes(q);
-  });
-  if(!list.length){grid.innerHTML='<div class="state">'+t.empty+'</div>';renderPagination(0);return;}
-  const totalPages=Math.ceil(list.length/PER_PAGE);
-  if(page>totalPages)page=totalPages;
-  if(page<1)page=1;
-  const start=(page-1)*PER_PAGE;
-  grid.innerHTML=list.slice(start,start+PER_PAGE).map(function(p){return productCardHTML(p,t)}).join('');
-  renderPagination(totalPages);
+  document.getElementById('listCount').textContent=LIST.length+(LIST.length===1?' offer':' offers');
+  document.getElementById('rows').innerHTML=LIST.length?LIST.slice(0,shown).map(rowHTML).join(''):'<div class="state">No offers in this category yet. <a href="/">Browse all codes</a></div>';
+  document.getElementById('more').hidden=LIST.length<=shown;
 }
+document.getElementById('more').addEventListener('click',function(){shown+=STEP;render()});
 
-function renderPagination(totalPages){
-  const pag=document.getElementById('pagination');
-  if(!pag)return;
-  if(totalPages<=1){pag.innerHTML='';return;}
-  var html='<button class="pg-btn" data-page="'+(page-1)+'"'+(page===1?' disabled':'')+' aria-label="Prev">‹</button>';
-  for(var i=1;i<=totalPages;i++){
-    if(i===1||i===totalPages||(i>=page-1&&i<=page+1)){
-      html+='<button class="pg-btn'+(i===page?' active':'')+'" data-page="'+i+'">'+i+'</button>';
-    }else if(i===page-2||i===page+2){
-      html+='<span class="pg-gap">…</span>';
-    }
-  }
-  html+='<button class="pg-btn" data-page="'+(page+1)+'"'+(page===totalPages?' disabled':'')+' aria-label="Next">›</button>';
-  pag.innerHTML=html;
-}
-
-const t=UI[lang];
-applyStaticUI(t);
-const slug=currentCategorySlug();
-const catInfo=CATEGORIES.find(function(c){return c.slug===slug});
-grid.innerHTML='<div class="state"><div class="spinner"></div>'+t.loading+'</div>';
-
-if(!catInfo){
-  renderNotFound(t);
+if(!cat){
+  document.getElementById('crumbCat').textContent='Not found';
+  document.getElementById('catTitle').textContent='Category not found';
+  document.getElementById('catSub').textContent='This category does not exist.';
+  document.getElementById('rows').removeAttribute('aria-busy');
+  document.getElementById('rows').innerHTML='<div class="state"><a href="/">Browse all current codes</a></div>';
 }else{
-  const catLabel=lang==='vi'?catInfo.vi:catInfo.en;
-  document.getElementById('breadcrumbCategory').textContent=catLabel;
-  document.getElementById('categoryTitle').textContent=tpl(t.categoryHeroTitleTpl,{category:catLabel});
-  document.getElementById('categorySub').textContent=tpl(t.categoryHeroSubTpl,{category:catLabel});
-
-  const title=tpl(t.categoryTitleTpl,{category:catLabel});
-  const desc=tpl(t.categoryMetaDescTpl,{category:catLabel});
-  const url=location.origin+'/category/'+slug;
+  var title=cat.en+' Coupons & Promo Codes 2026 | Defio Coupon';
+  var desc='Verified '+cat.en+' coupons and promo codes from independent brands, updated regularly. Click to reveal and save.';
+  var url=location.origin+'/category/'+slug;
   document.getElementById('metaTitle').textContent=title;
   document.getElementById('metaDesc').setAttribute('content',desc);
   document.getElementById('metaCanonical').setAttribute('href',url);
+  document.getElementById('crumbCat').textContent=cat.en;
+  document.getElementById('catIcon').innerHTML=icon(slug);
+  document.getElementById('catTitle').textContent=cat.en+' coupons & promo codes';
+  document.getElementById('catSub').textContent='Verified '+cat.en.toLowerCase()+' codes and deals, updated regularly.';
+  document.getElementById('listTitle').textContent=cat.en;
 
-  fetchData().then(function(data){
-    CATEGORY_PRODUCTS=groupToProducts(data.coupons).filter(function(p){return p.categories.indexOf(slug)!==-1}).reverse();
+  loadCoupons(function(data){
+    LIST=groupToProducts(data.coupons).filter(function(p){return p.categories.indexOf(slug)!==-1}).reverse();
+    document.getElementById('rows').removeAttribute('aria-busy');
     render();
-    if(CATEGORY_PRODUCTS.length){
-      injectJsonLd({
-        "@context":"https://schema.org",
-        "@type":"CollectionPage",
-        "name": title,
-        "url": url,
-        "mainEntity":{
-          "@type":"ItemList",
-          "itemListElement": CATEGORY_PRODUCTS.map(function(p,i){
-            return {"@type":"ListItem","position":i+1,"item":{
-              "@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,
-              "seller":{"@type":"Organization","name":p.brand}
-            }};
-          })
-        }
-      }, 'category-jsonld');
-    }
-  }).catch(function(e){
-    grid.innerHTML='<div class="state">'+t.err+'</div>';
-    console.error(e);
-  });
+    if(LIST.length)injectJsonLd({"@context":"https://schema.org","@type":"CollectionPage","name":title,"url":url,
+      "mainEntity":{"@type":"ItemList","itemListElement":LIST.map(function(p,i){return {"@type":"ListItem","position":i+1,"item":{"@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,"seller":{"@type":"Organization","name":p.brand}}}})}},'category-jsonld');
+  },function(){document.getElementById('rows').innerHTML='<div class="state">Codes could not load. Refresh the page to try again.</div>';});
 }
-document.getElementById('searchInput').addEventListener('input',function(e){query=e.target.value;page=1;render()});
-document.getElementById('pagination').addEventListener('click',function(e){
-  const b=e.target.closest('.pg-btn');if(!b||b.disabled)return;
-  const p=parseInt(b.dataset.page,10);if(isNaN(p))return;
-  page=p;render();
-  window.scrollTo({top:0,behavior:'smooth'});
-});
 </script>
 </body>
 </html>

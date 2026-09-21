@@ -60,7 +60,8 @@ $blogSeen = @{}
 try {
     $blogRows = Invoke-RestMethod -Uri $SheetBlogUrl
     foreach ($r in $blogRows) {
-        $project = ("" + $r.'Tên Dự Án').Trim()
+        # Lay theo vi tri cot (cot dau = "Ten Du An"): PowerShell 5.1 doc sai ten cot tieng Viet
+        $project = ("" + @($r.PSObject.Properties.Value)[0]).Trim()
         if (-not $project) { continue }
         $slug = Slugify $project
         if ($slug -eq "" -or $blogSeen.ContainsKey($slug)) { continue }
