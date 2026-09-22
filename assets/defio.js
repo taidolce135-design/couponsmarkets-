@@ -3,7 +3,8 @@
    Can nap SAU assets/data.js.
    ================================================================ */
 
-var BRAND_MARK='<span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12 12 20l-8-8V4h8z"/><circle cx="8.5" cy="8.5" r="1.3" fill="#fff"/></svg></span>';
+/* Logo "the gia" (phuong an A) - cung hinh voi favicon.svg */
+var BRAND_MARK='<svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="dcg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B7BFF"/><stop offset="1" stop-color="#5236E0"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#dcg)"/><path d="M33.5 12H48a4 4 0 0 1 4 4v14.5a4 4 0 0 1-1.2 2.8L33.3 50.8a4 4 0 0 1-5.6 0L13.2 36.3a4 4 0 0 1 0-5.6L30.7 13.2A4 4 0 0 1 33.5 12z" fill="#fff"/><circle cx="42.5" cy="21.5" r="4.2" fill="#6246EA"/></svg>';
 
 /* Header: <header class="wrap hd" id="siteHeader" data-active="blog" data-search="off"> */
 function renderSiteHeader(){
