@@ -1,4 +1,5 @@
 {
+  "cleanUrls": true,
   "redirects": [
     { "source": "/product/:slug", "destination": "/coupons/:slug", "permanent": true }
   ],
