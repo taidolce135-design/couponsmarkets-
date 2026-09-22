@@ -1,16 +1,16 @@
 {
+  "cleanUrls": true,
   "redirects": [
     { "source": "/product/:slug", "destination": "/coupons/:slug", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/site/:slug", "destination": "/site.html" },
-    { "source": "/coupons/:slug", "destination": "/coupons.html" },
-    { "source": "/category/:slug", "destination": "/category.html" },
-    { "source": "/about", "destination": "/page.html" },
-    { "source": "/privacy-policy", "destination": "/page.html" },
-    { "source": "/terms-of-use", "destination": "/page.html" },
-    { "source": "/contact", "destination": "/page.html" },
-    { "source": "/blog", "destination": "/blog.html" },
-    { "source": "/blog/:slug", "destination": "/blogpost.html" }
+    { "source": "/site/:slug", "destination": "/site" },
+    { "source": "/coupons/:slug", "destination": "/coupons" },
+    { "source": "/category/:slug", "destination": "/category" },
+    { "source": "/about", "destination": "/page" },
+    { "source": "/privacy-policy", "destination": "/page" },
+    { "source": "/terms-of-use", "destination": "/page" },
+    { "source": "/contact", "destination": "/page" },
+    { "source": "/blog/:slug", "destination": "/blogpost" }
   ]
 }
