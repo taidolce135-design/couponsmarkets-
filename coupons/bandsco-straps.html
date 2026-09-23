@@ -93,7 +93,7 @@
   .p-hero .plogo{width:56px;height:56px}
 }
 </style>
-<script type="application/ld+json" id="product-jsonld">{"@context":"https://schema.org","@type":"Product","name":"Save Up to 30% Off Apple Watch, Garmin & Samsung Bands","description":"Replacement smartwatch bands and straps for Apple Watch, Garmin, Samsung, Fitbit, OnePlus and more — leather, nylon and silicone. Up to 30% off with free worldwide shipping and 100-day returns.","brand":{"@type":"Brand","name":"BandsCo Straps"},"url":"https://defiocoupon.com/coupons/bandsco-straps","offers":[{"@type":"Offer","url":"https://defiocoupon.com/coupons/bandsco-straps","availability":"https://schema.org/InStock","category":"tech-electronics"}]}</script></head>
+<script type="application/ld+json" id="breadcrumb-jsonld">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://defiocoupon.com/"},{"@type":"ListItem","position":2,"name":"BandsCo Straps","item":"https://defiocoupon.com/site/bandsco-straps"},{"@type":"ListItem","position":3,"name":"Save Up to 30% Off Apple Watch, Garmin \u0026 Samsung Bands","item":"https://defiocoupon.com/coupons/bandsco-straps"}]}</script></head>
 <body>
 
 <div class="top">
@@ -196,11 +196,16 @@ function renderProduct(p){
   document.getElementById('ogTitleTag').setAttribute('content',title);
   document.getElementById('ogDesc').setAttribute('content',metaDesc);
   document.getElementById('ogUrl').setAttribute('content',url);
+  /* don khoi Product cu neu con sot lai trong file prerender */
+  var legacy=document.getElementById('product-jsonld'); if(legacy)legacy.remove();
   injectJsonLd({
-    "@context":"https://schema.org","@type":"Product","name":p.title,"description":p.desc,
-    "brand":{"@type":"Brand","name":p.brand},"url":url,
-    "offers":p.offers.map(function(){return {"@type":"Offer","url":url,"availability":"https://schema.org/InStock","category":p.categories.join(", ")}})
-  },'product-jsonld');
+    "@context":"https://schema.org","@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Home","item":location.origin+'/'},
+      {"@type":"ListItem","position":2,"name":p.brand,"item":location.origin+brandUrl},
+      {"@type":"ListItem","position":3,"name":p.title,"item":url}
+    ]
+  },'breadcrumb-jsonld');
 }
 
 function renderNotFound(){

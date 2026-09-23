@@ -93,7 +93,7 @@
   .p-hero .plogo{width:56px;height:56px}
 }
 </style>
-<script type="application/ld+json" id="product-jsonld">{"@context":"https://schema.org","@type":"Product","name":"Sitewide Sale on 12V Heated Jackets — Free Shipping","description":"Shop DEWBU heated jackets and pants. Heats to 140°F in seconds, machine washable, 3-year warranty.","brand":{"@type":"Brand","name":"DEWBU"},"url":"https://defiocoupon.com/coupons/dewbu","offers":[{"@type":"Offer","url":"https://defiocoupon.com/coupons/dewbu","availability":"https://schema.org/InStock","category":"clothing-accessories"}]}</script></head>
+<script type="application/ld+json" id="breadcrumb-jsonld">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://defiocoupon.com/"},{"@type":"ListItem","position":2,"name":"DEWBU","item":"https://defiocoupon.com/site/dewbu"},{"@type":"ListItem","position":3,"name":"Sitewide Sale on 12V Heated Jackets — Free Shipping","item":"https://defiocoupon.com/coupons/dewbu"}]}</script></head>
 <body>
 
 <div class="top">
@@ -196,11 +196,16 @@ function renderProduct(p){
   document.getElementById('ogTitleTag').setAttribute('content',title);
   document.getElementById('ogDesc').setAttribute('content',metaDesc);
   document.getElementById('ogUrl').setAttribute('content',url);
+  /* don khoi Product cu neu con sot lai trong file prerender */
+  var legacy=document.getElementById('product-jsonld'); if(legacy)legacy.remove();
   injectJsonLd({
-    "@context":"https://schema.org","@type":"Product","name":p.title,"description":p.desc,
-    "brand":{"@type":"Brand","name":p.brand},"url":url,
-    "offers":p.offers.map(function(){return {"@type":"Offer","url":url,"availability":"https://schema.org/InStock","category":p.categories.join(", ")}})
-  },'product-jsonld');
+    "@context":"https://schema.org","@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Home","item":location.origin+'/'},
+      {"@type":"ListItem","position":2,"name":p.brand,"item":location.origin+brandUrl},
+      {"@type":"ListItem","position":3,"name":p.title,"item":url}
+    ]
+  },'breadcrumb-jsonld');
 }
 
 function renderNotFound(){
