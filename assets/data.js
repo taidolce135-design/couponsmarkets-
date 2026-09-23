@@ -544,14 +544,8 @@ function buildCouponJsonLd(products){
       return {
         "@type":"ListItem",
         "position": i+1,
-        "item":{
-          "@type":"Offer",
-          "name": p.title,
-          "description": p.desc,
-          "url": origin + '/coupons/' + p.slug,
-          "category": p.categories.join(', '),
-          "seller":{"@type":"Organization","name":p.brand}
-        }
+        "name": p.title,
+        "url": origin + '/coupons/' + p.slug
       };
     })
   };
