@@ -115,7 +115,7 @@ loadCoupons(function(data){
   document.getElementById('ogDesc').setAttribute('content',desc);
   document.getElementById('ogUrl').setAttribute('content',url);
   injectJsonLd({"@context":"https://schema.org","@type":"CollectionPage","name":title,"url":url,"about":{"@type":"Organization","name":brand},
-    "mainEntity":{"@type":"ItemList","itemListElement":products.map(function(p,i){return {"@type":"ListItem","position":i+1,"item":{"@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,"category":p.categories.join(", "),"seller":{"@type":"Organization","name":brand}}}})}},'store-jsonld');
+    "mainEntity":{"@type":"ItemList","itemListElement":products.map(function(p,i){return {"@type":"ListItem","position":i+1,"name":p.title,"url":location.origin+'/coupons/'+p.slug}})}},'store-jsonld');
 },function(){document.getElementById('rows').innerHTML='<div class="state">Codes could not load. Refresh the page to try again.</div>';});
 loadBlog(function(posts){POSTS=posts;renderSide();});
 </script>
