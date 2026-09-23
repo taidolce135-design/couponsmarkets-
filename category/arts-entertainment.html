@@ -39,7 +39,7 @@
 .cat-chips a[aria-current="page"]{background:var(--violet-soft);border-color:var(--violet);color:var(--violet-deep)}
 .cat-chips svg.i{width:16px;height:16px;color:var(--ink-soft)}
 </style>
-<script type="application/ld+json" id="category-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"Arts & Entertainment Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/category/arts-entertainment","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Offer","name":"Award-Winning Puzzles & Games From $13.99","description":"Shop eeBoo jigsaw puzzles and educational games. Original artist illustrations, recycled materials, FSC-certified paper.","url":"https://defiocoupon.com/coupons/eeboo","seller":{"@type":"Organization","name":"eeBoo"}}},{"@type":"ListItem","position":2,"item":{"@type":"Offer","name":"Save 5% Off Premium Mahjong Tile Sets","description":"Get 5% off engraved American Mahjong tiles, mats, racks and pushers. Free US shipping over $300.","url":"https://defiocoupon.com/coupons/mahjong-studios","seller":{"@type":"Organization","name":"Mahjong Studios"}}}]}}</script></head>
+<script type="application/ld+json" id="category-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"Arts & Entertainment Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/category/arts-entertainment","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Award-Winning Puzzles & Games From $13.99","url":"https://defiocoupon.com/coupons/eeboo"},{"@type":"ListItem","position":2,"name":"Save 5% Off Premium Mahjong Tile Sets","url":"https://defiocoupon.com/coupons/mahjong-studios"}]}}</script></head>
 <body>
 
 <div class="top">
@@ -110,7 +110,7 @@ if(!cat){
     document.getElementById('rows').removeAttribute('aria-busy');
     render();
     if(LIST.length)injectJsonLd({"@context":"https://schema.org","@type":"CollectionPage","name":title,"url":url,
-      "mainEntity":{"@type":"ItemList","itemListElement":LIST.map(function(p,i){return {"@type":"ListItem","position":i+1,"item":{"@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,"seller":{"@type":"Organization","name":p.brand}}}})}},'category-jsonld');
+      "mainEntity":{"@type":"ItemList","itemListElement":LIST.map(function(p,i){return {"@type":"ListItem","position":i+1,"name":p.title,"url":location.origin+'/coupons/'+p.slug}})}},'category-jsonld');
   },function(){document.getElementById('rows').innerHTML='<div class="state">Codes could not load. Refresh the page to try again.</div>';});
 }
 </script>

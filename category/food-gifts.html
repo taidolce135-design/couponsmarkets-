@@ -39,7 +39,7 @@
 .cat-chips a[aria-current="page"]{background:var(--violet-soft);border-color:var(--violet);color:var(--violet-deep)}
 .cat-chips svg.i{width:16px;height:16px;color:var(--ink-soft)}
 </style>
-<script type="application/ld+json" id="category-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"Food & Gifts Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/category/food-gifts","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Offer","name":"10% Off Sauces — Free Shipping Over $40","description":"Get 10% off 10-calorie gourmet sauces. Orders over $40 ship free, over $65 add a free bottle.","url":"https://defiocoupon.com/coupons/taste-flavor-co","seller":{"@type":"Organization","name":"Taste Flavor Co"}}}]}}</script></head>
+<script type="application/ld+json" id="category-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"Food & Gifts Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/category/food-gifts","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"10% Off Sauces — Free Shipping Over $40","url":"https://defiocoupon.com/coupons/taste-flavor-co"}]}}</script></head>
 <body>
 
 <div class="top">
@@ -110,7 +110,7 @@ if(!cat){
     document.getElementById('rows').removeAttribute('aria-busy');
     render();
     if(LIST.length)injectJsonLd({"@context":"https://schema.org","@type":"CollectionPage","name":title,"url":url,
-      "mainEntity":{"@type":"ItemList","itemListElement":LIST.map(function(p,i){return {"@type":"ListItem","position":i+1,"item":{"@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,"seller":{"@type":"Organization","name":p.brand}}}})}},'category-jsonld');
+      "mainEntity":{"@type":"ItemList","itemListElement":LIST.map(function(p,i){return {"@type":"ListItem","position":i+1,"name":p.title,"url":location.origin+'/coupons/'+p.slug}})}},'category-jsonld');
   },function(){document.getElementById('rows').innerHTML='<div class="state">Codes could not load. Refresh the page to try again.</div>';});
 }
 </script>
