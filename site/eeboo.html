@@ -44,7 +44,7 @@
 .s-side .panel span{font-weight:600;font-size:15px;line-height:1.35}
 @media (max-width:900px){.s-layout{grid-template-columns:1fr}}
 </style>
-<script type="application/ld+json" id="store-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"eeBoo Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/site/eeboo","about":{"@type":"Organization","name":"eeBoo"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Offer","name":"Award-Winning Puzzles & Games From $13.99","description":"Shop eeBoo jigsaw puzzles and educational games. Original artist illustrations, recycled materials, FSC-certified paper.","url":"https://defiocoupon.com/coupons/eeboo","category":"arts-entertainment","seller":{"@type":"Organization","name":"eeBoo"}}}]}}</script></head>
+<script type="application/ld+json" id="store-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"eeBoo Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/site/eeboo","about":{"@type":"Organization","name":"eeBoo"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Award-Winning Puzzles & Games From $13.99","url":"https://defiocoupon.com/coupons/eeboo"}]}}</script></head>
 <body>
 
 <div class="top">
@@ -114,7 +114,7 @@ loadCoupons(function(data){
   document.getElementById('ogDesc').setAttribute('content',desc);
   document.getElementById('ogUrl').setAttribute('content',url);
   injectJsonLd({"@context":"https://schema.org","@type":"CollectionPage","name":title,"url":url,"about":{"@type":"Organization","name":brand},
-    "mainEntity":{"@type":"ItemList","itemListElement":products.map(function(p,i){return {"@type":"ListItem","position":i+1,"item":{"@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,"category":p.categories.join(", "),"seller":{"@type":"Organization","name":brand}}}})}},'store-jsonld');
+    "mainEntity":{"@type":"ItemList","itemListElement":products.map(function(p,i){return {"@type":"ListItem","position":i+1,"name":p.title,"url":location.origin+'/coupons/'+p.slug}})}},'store-jsonld');
 },function(){document.getElementById('rows').innerHTML='<div class="state">Codes could not load. Refresh the page to try again.</div>';});
 loadBlog(function(posts){POSTS=posts;renderSide();});
 </script>

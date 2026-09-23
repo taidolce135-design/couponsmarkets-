@@ -44,7 +44,7 @@
 .s-side .panel span{font-weight:600;font-size:15px;line-height:1.35}
 @media (max-width:900px){.s-layout{grid-template-columns:1fr}}
 </style>
-<script type="application/ld+json" id="store-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"AECOJOY Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/site/aecojoy","about":{"@type":"Organization","name":"AECOJOY"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Offer","name":"Save 15% Off Gazebos, Sheds & Outdoor Living","description":"Use code EBT0CX5LMMRNIEO for 15% off AECOJOY gazebos, storage sheds, patio furniture and outdoor essentials — durable outdoor living at budget-friendly prices.","url":"https://defiocoupon.com/coupons/aecojoy","category":"home-garden","seller":{"@type":"Organization","name":"AECOJOY"}}}]}}</script></head>
+<script type="application/ld+json" id="store-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"AECOJOY Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/site/aecojoy","about":{"@type":"Organization","name":"AECOJOY"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Save 15% Off Gazebos, Sheds & Outdoor Living","url":"https://defiocoupon.com/coupons/aecojoy"}]}}</script></head>
 <body>
 
 <div class="top">
@@ -114,7 +114,7 @@ loadCoupons(function(data){
   document.getElementById('ogDesc').setAttribute('content',desc);
   document.getElementById('ogUrl').setAttribute('content',url);
   injectJsonLd({"@context":"https://schema.org","@type":"CollectionPage","name":title,"url":url,"about":{"@type":"Organization","name":brand},
-    "mainEntity":{"@type":"ItemList","itemListElement":products.map(function(p,i){return {"@type":"ListItem","position":i+1,"item":{"@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,"category":p.categories.join(", "),"seller":{"@type":"Organization","name":brand}}}})}},'store-jsonld');
+    "mainEntity":{"@type":"ItemList","itemListElement":products.map(function(p,i){return {"@type":"ListItem","position":i+1,"name":p.title,"url":location.origin+'/coupons/'+p.slug}})}},'store-jsonld');
 },function(){document.getElementById('rows').innerHTML='<div class="state">Codes could not load. Refresh the page to try again.</div>';});
 loadBlog(function(posts){POSTS=posts;renderSide();});
 </script>

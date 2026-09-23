@@ -44,7 +44,7 @@
 .s-side .panel span{font-weight:600;font-size:15px;line-height:1.35}
 @media (max-width:900px){.s-layout{grid-template-columns:1fr}}
 </style>
-<script type="application/ld+json" id="store-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"Simube Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/site/simube","about":{"@type":"Organization","name":"Simube"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Offer","name":"Sim Racing Wheel Parts at a Fraction of OEM Prices","description":"CNC aluminum quick releases, hubs and paddle modules for Fanatec bases. Same quality, half the price.","url":"https://defiocoupon.com/coupons/simube","category":"tech-electronics","seller":{"@type":"Organization","name":"Simube"}}}]}}</script></head>
+<script type="application/ld+json" id="store-jsonld">{"@context":"https://schema.org","@type":"CollectionPage","name":"Simube Coupons & Promo Codes 2026 | Defio Coupon","url":"https://defiocoupon.com/site/simube","about":{"@type":"Organization","name":"Simube"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Sim Racing Wheel Parts at a Fraction of OEM Prices","url":"https://defiocoupon.com/coupons/simube"}]}}</script></head>
 <body>
 
 <div class="top">
@@ -114,7 +114,7 @@ loadCoupons(function(data){
   document.getElementById('ogDesc').setAttribute('content',desc);
   document.getElementById('ogUrl').setAttribute('content',url);
   injectJsonLd({"@context":"https://schema.org","@type":"CollectionPage","name":title,"url":url,"about":{"@type":"Organization","name":brand},
-    "mainEntity":{"@type":"ItemList","itemListElement":products.map(function(p,i){return {"@type":"ListItem","position":i+1,"item":{"@type":"Offer","name":p.title,"description":p.desc,"url":location.origin+'/coupons/'+p.slug,"category":p.categories.join(", "),"seller":{"@type":"Organization","name":brand}}}})}},'store-jsonld');
+    "mainEntity":{"@type":"ItemList","itemListElement":products.map(function(p,i){return {"@type":"ListItem","position":i+1,"name":p.title,"url":location.origin+'/coupons/'+p.slug}})}},'store-jsonld');
 },function(){document.getElementById('rows').innerHTML='<div class="state">Codes could not load. Refresh the page to try again.</div>';});
 loadBlog(function(posts){POSTS=posts;renderSide();});
 </script>
